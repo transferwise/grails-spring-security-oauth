@@ -1,6 +1,4 @@
-grails.project.class.dir = "target/classes"
-grails.project.test.class.dir = "target/test-classes"
-grails.project.test.reports.dir = "target/test-reports"
+grails.project.work.dir = 'target'
 grails.project.target.level = 1.6
 
 grails.project.dependency.resolution = {
@@ -15,10 +13,6 @@ grails.project.dependency.resolution = {
         grailsCentral()
         mavenCentral()
         grailsRepo "http://grails.org/plugins"
-
-        mavenRepo "http://maven.springframework.org/release"
-        mavenRepo "http://maven.springframework.org/snapshot"
-        mavenRepo "http://maven.springframework.org/milestone"
     }
 
     dependencies {

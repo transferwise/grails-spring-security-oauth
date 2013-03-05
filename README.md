@@ -94,11 +94,13 @@ In your view you can use the taglib exposed from this plugin and from OAuth plug
 <oauth:connect provider="twitter" id="twitter-connect-link">Twitter</oauth:connect>
 <oauth:connect provider="facebook" id="facebook-connect-link">Facebook</oauth:connect>
 <oauth:connect provider="google" id="google-connect-link">Google</oauth:connect>
+<oauth:connect provider="linkedin" id="linkedin-connect-link">Linkedin</oauth:connect>
 <oauth:connect provider="yahoo" id="yahoo-connect-link">Yahoo</oauth:connect>
 Logged with facebook? <s2o:ifLoggedInWith provider="facebook">yes</s2o:ifLoggedInWith><s2o:ifNotLoggedInWith provider="facebook">no</s2o:ifNotLoggedInWith>
 Logged with twitter? <s2o:ifLoggedInWith provider="twitter">yes</s2o:ifLoggedInWith><s2o:ifNotLoggedInWith provider="twitter">no</s2o:ifNotLoggedInWith>
 Logged with google? <s2o:ifLoggedInWith provider="google">yes</s2o:ifLoggedInWith><s2o:ifNotLoggedInWith provider="google">no</s2o:ifNotLoggedInWith>
 Logged with linkedin? <s2o:ifLoggedInWith provider="linkedin">yes</s2o:ifLoggedInWith><s2o:ifNotLoggedInWith provider="linkedin">no</s2o:ifNotLoggedInWith>
+Logged with yahoo? <s2o:ifLoggedInWith provider="yahoo">yes</s2o:ifLoggedInWith><s2o:ifNotLoggedInWith provider="yahoo">no</s2o:ifNotLoggedInWith>
 ```
 
 That's it! 

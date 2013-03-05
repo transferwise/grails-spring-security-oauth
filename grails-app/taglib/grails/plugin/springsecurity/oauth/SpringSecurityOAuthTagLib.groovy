@@ -33,7 +33,6 @@ class SpringSecurityOAuthTagLib {
         if (!provider || !springSecurityService.isLoggedIn()) {
             return false
         }
-        def currentUser = springSecurityService.currentUser
         def sessionKey = oauthService.findSessionKeyForAccessToken(provider)
         return (session[sessionKey] instanceof Token)
     }
