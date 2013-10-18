@@ -1,7 +1,7 @@
 grails-spring-security-oauth
 ============================
 
-Adds OAuth-based authentication to the [Spring Security plugin](http://grails.org/plugin/spring-security-core] using the [OAuth plugin](http://grails.org/plugin/oauth-scribe].
+Adds OAuth-based authentication to the [Spring Security plugin][spring-security-plugin] using the [OAuth plugin][oauth-plugin].
 
 This plugin provides an OAuth realm that can easily be integrated into existing applications and a host of utility functions to make things like "log in with Twitter" almost trivial.
 
@@ -103,4 +103,7 @@ Logged with linkedin? <s2o:ifLoggedInWith provider="linkedin">yes</s2o:ifLoggedI
 Logged with yahoo? <s2o:ifLoggedInWith provider="yahoo">yes</s2o:ifLoggedInWith><s2o:ifNotLoggedInWith provider="yahoo">no</s2o:ifNotLoggedInWith>
 ```
 
-That's it! 
+That's it!
+
+[spring-security-plugin]: http://grails.org/plugin/spring-security-core
+[oauth-plugin]: http://grails.org/plugin/oauth-scribe
