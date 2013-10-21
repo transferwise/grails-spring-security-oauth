@@ -9,7 +9,15 @@ This plugin provides an OAuth realm that can easily be integrated into existing 
 Installation
 ------------
 
-    grails install-plugin spring-security-oauth
+In `BuildConfig.groovy`, add the dependency to "plugins" section:
+
+    plugins {
+        //...
+        compile ':spring-security-oauth:2.0.1.1'
+        //...
+    }
+
+The version should be changed to reflect the actual version you would like to use. 
 
 
 Usage
