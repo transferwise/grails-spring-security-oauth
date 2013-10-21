@@ -1,6 +1,9 @@
+
 grails.project.work.dir = 'target'
+
 grails.project.target.level = 1.6
 
+grails.project.dependency.resolver = "maven"
 grails.project.dependency.resolution = {
 
     inherits "global"
@@ -12,12 +15,11 @@ grails.project.dependency.resolution = {
         grailsHome()
         grailsCentral()
         mavenCentral()
-        grailsRepo "http://grails.org/plugins"
+        mavenRepo 'http://repo.spring.io/milestone'
     }
 
     dependencies {
-        runtime "org.scribe:scribe:1.3.2"
-        test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
+        runtime "org.scribe:scribe:1.3.5"
     }
 
     plugins {
@@ -26,12 +28,8 @@ grails.project.dependency.resolution = {
             transitive = false
         }
 
-        build ":release:2.2.0", ":rest-client-builder:1.0.3", {
+        build ":release:3.0.1", ":rest-client-builder:2.0.0", {
             export = false
-        }
-
-        test(":spock:0.7") {
-            exclude "spock-grails-support"
         }
     }
 
