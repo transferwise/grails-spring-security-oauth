@@ -1,6 +1,8 @@
 grails-spring-security-oauth
 ============================
 
+[![Build Status](https://travis-ci.org/enr/grails-spring-security-oauth.png?branch=master)](https://travis-ci.org/enr/grails-spring-security-oauth)
+
 Adds OAuth-based authentication to the [Spring Security plugin][spring-security-plugin] using the [OAuth plugin][oauth-plugin].
 
 This plugin provides an OAuth realm that can easily be integrated into existing applications and a host of utility functions to make things like "log in with Twitter" almost trivial.
