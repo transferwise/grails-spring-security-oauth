@@ -328,7 +328,7 @@ class SpringSecurityOAuthController {
 
     protected Map getDefaultTargetUrl() {
         def config = SpringSecurityUtils.securityConfig
-        def savedRequest = session[DefaultSavedRequest.SPRING_SECURITY_SAVED_REQUEST_KEY]
+        def savedRequest = SpringSecurityUtils.getSavedRequest(session)
         def defaultUrlOnNull = '/'
 
         if (savedRequest && !config.successHandler.alwaysUseDefault) {
