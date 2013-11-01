@@ -6,7 +6,7 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 * @author <a href='mailto:donbeave@gmail.com'>Alexey Zhokhov</a>
 */
 class SpringSecurityOauthGrailsPlugin {
-    def version = "2.0.1.2"
+    def version = "2.0.2"
     def grailsVersion = "1.2.2 > *"
     def dependsOn = [springSecurityCore: '2.0-RC2 > *', oauth: "2.0 > *"]
     def pluginExcludes = [
@@ -44,18 +44,17 @@ into existing applications and a host of utility functions to make things like "
             return
         }
 
-        if (printStatusMessages) {
-            println '\nConfiguring Spring Security OAuth ...'
-        }
         SpringSecurityUtils.loadSecondaryConfig 'DefaultSpringSecurityOAuthConfig'
         // have to get again after overlaying DefaultSpringSecurityOAuthConfig
-        // conf = SpringSecurityUtils.securityConfig
+        conf = SpringSecurityUtils.securityConfig
 
         if (!conf.oauth.active) {
             return
         }
 
         if (printStatusMessages) {
+            println '\nConfiguring Spring Security OAuth ...'
+
             println '... finished configuring Spring Security OAuth\n'
         }
     }
