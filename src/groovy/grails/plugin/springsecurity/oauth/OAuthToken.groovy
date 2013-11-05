@@ -29,6 +29,8 @@ import org.springframework.security.core.GrantedAuthority
  */
 abstract class OAuthToken extends AbstractAuthenticationToken {
 
+    private static final long serialVersionUID = 71500862412812683L;
+
     protected Token accessToken
     protected Map tokenParams
     protected Object principal
