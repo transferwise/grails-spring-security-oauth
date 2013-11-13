@@ -39,8 +39,8 @@ target(s2InitOauth: 'Initializes OAuth artifacts for the Spring Security OAuth p
     }
 
     createDomains()
-    createControllers()
-    createViews()
+    //createControllers()
+    //createViews()
     createI18N()
     updateConfig()
 
@@ -134,6 +134,7 @@ private void createDomains() {
             "$appDir/domain/${oAuthIDPackageDir}${oAuthIDClassName}.groovy"
 }
 
+/*
 private void createControllers() {
     generateFile "$templateDir/SpringSecurityOAuthController.groovy.template",
             "$appDir/controllers/${oAuthIDPackageDir}/SpringSecurityOAuthController.groovy"
@@ -144,6 +145,7 @@ private void createViews() {
     ant.mkdir dir: "$appDir/views/$dir"
     generateFile "$templateDir/askToLinkOrCreateAccount.gsp.template", "$appDir/views/$dir/askToLinkOrCreateAccount.gsp"
 }
+*/
 
 private void createI18N() {
     generateFile "$templateDir/spring-security-oauth.messages.properties.template",
