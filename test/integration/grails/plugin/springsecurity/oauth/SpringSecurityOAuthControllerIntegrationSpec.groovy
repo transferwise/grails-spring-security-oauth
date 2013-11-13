@@ -11,17 +11,20 @@ class SpringSecurityOAuthControllerIntegrationSpec extends Specification {
   
     SpringSecurityOAuthController controller
 
+    def oauthService
+
     def setup() {
         controller = new SpringSecurityOAuthController()
+        controller.oauthService = oauthService
     }
       
-    def "should work"() {
+    def "onSuccess gives 400 if provider is missing"() {
         given:
-            controller.params.test = 'Atest'
+            controller.params.provider = ''
         when:
-            def res = controller.index()
+            controller.onSuccess()
         then:
-            res == "index-Atest"
+            controller.response.status == 400
     }
 
 }

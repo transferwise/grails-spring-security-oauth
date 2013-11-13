@@ -35,10 +35,6 @@ class SpringSecurityOAuthController {
     def oauthService
     def springSecurityService
 
-    String index() {
-        return "index-${params.test}"
-    }
-
     /**
      * This can be used as a callback for a successful OAuth authentication
      * attempt.
@@ -182,7 +178,7 @@ class SpringSecurityOAuthController {
     // utils
 
     protected renderError(code, msg) {
-        log.error msg + " (returning ${code})"
+        log.warn "${msg} (returning ${code})"
         render status: code, text: msg
     }
 
