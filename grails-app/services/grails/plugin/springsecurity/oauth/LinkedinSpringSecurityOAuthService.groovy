@@ -37,12 +37,12 @@ class LinkedinSpringSecurityOAuthService {
         try {
             user = JSON.parse(response.body)
         } catch (Exception e) {
-            log.error "Error parsing response from Linkedin. Response:\n${response.body}"
+            log.warn "Error parsing response from Linkedin. Response:\n${response.body}"
             throw new OAuthLoginException("Error parsing response from Linkedin", e)
         }
         def url = user?.siteStandardProfileRequest?.url
         if (!url) {
-            log.error "No profile url from Linkedin. Response:\n${response.body}"
+            log.warn "No profile url from Linkedin. Response:\n${response.body}"
             throw new OAuthLoginException("No profile url from Linkedin")
         }
         def query = new URL(url).query

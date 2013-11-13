@@ -33,11 +33,11 @@ class TwitterSpringSecurityOAuthService {
         try {
             user = JSON.parse(response.body)
         } catch (Exception e) {
-            log.error "Error parsing response from Twitter. Response:\n${response.body}"
+            log.warn "Error parsing response from Twitter. Response:\n${response.body}"
             throw new OAuthLoginException("Error parsing response from Twitter", e)
         }
         if (! user?.id) {
-            log.error "No user id from Twitter. Response:\n${response.body}"
+            log.warn "No user id from Twitter. Response:\n${response.body}"
             throw new OAuthLoginException("No user id from Twitter")
         }
         String profileId = "${user.id}"

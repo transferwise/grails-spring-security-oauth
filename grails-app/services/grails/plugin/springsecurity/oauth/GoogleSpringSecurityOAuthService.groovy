@@ -35,11 +35,11 @@ class GoogleSpringSecurityOAuthService {
         try {
             user = JSON.parse(response.body)
         } catch (Exception e) {
-            log.error "Error parsing response from Google. Response:\n${response.body}"
+            log.warn "Error parsing response from Google. Response:\n${response.body}"
             throw new OAuthLoginException("Error parsing response from Google", e)
         }
         if (! user?.email) {
-            log.error "No user email from Google. Response:\n${response.body}"
+            log.warn "No user email from Google. Response:\n${response.body}"
             throw new OAuthLoginException("No user email from Google")
         }
         return new GoogleOAuthToken(accessToken, user.email)
