@@ -141,6 +141,7 @@ class SpringSecurityOAuthController {
             if (!springSecurityService.loggedIn) {
                 def config = SpringSecurityUtils.securityConfig
 
+                def User = lookupUserClass()
                 boolean created = command.validate() && User.withTransaction { status ->
                     def user = lookupUserClass().newInstance()
                     //User user = new User(username: command.username, password: command.password1, enabled: true)
@@ -185,7 +186,8 @@ class SpringSecurityOAuthController {
     protected OAuthToken createAuthToken(providerName, scribeToken) {
         def providerService = grailsApplication.mainContext.getBean("${providerName}SpringSecurityOAuthService")
         OAuthToken oAuthToken = providerService.createAuthToken(scribeToken)
-
+        
+        def OAuthID = lookupOAuthIdClass()
         def oAuthID = OAuthID.findByProviderAndAccessToken(oAuthToken.providerName, oAuthToken.socialId)
         if (oAuthID) {
             updateOAuthToken(oAuthToken, oAuthID.user)
@@ -330,7 +332,7 @@ class SpringSecurityOAuthController {
 
     protected Map getDefaultTargetUrl() {
         def config = SpringSecurityUtils.securityConfig
-        def savedRequest = session[DefaultSavedRequest.SPRING_SECURITY_SAVED_REQUEST_KEY]
+        def savedRequest = SpringSecurityUtils.getSavedRequest(session)
         def defaultUrlOnNull = '/'
 
         if (savedRequest && !config.successHandler.alwaysUseDefault) {
@@ -371,9 +373,18 @@ class SpringSecurityOAuthController {
         grailsApplication.getDomainClass(lookupUserRoleClassName()).clazz
     }
 
+    protected String lookupOAuthIdClassName() {
+        SpringSecurityUtils.securityConfig.oauth.domainClass
+    }
+
+    protected Class<?> lookupOAuthIdClass() {
+        grailsApplication.getDomainClass(lookupOAuthIdClassName()).clazz
+    }
 }
 
 class OAuthCreateAccountCommand {
+
+    def grailsApplication
 
     String username
     String password1
@@ -381,7 +392,7 @@ class OAuthCreateAccountCommand {
 
     static constraints = {
         username blank: false, validator: { String username, command ->
-            def User = lookupUserClass()
+            def User = command.grailsApplication.getDomainClass(SpringSecurityUtils.securityConfig.userLookup.userDomainClassName).clazz
             User.withNewSession { session ->
                 if (username && User.countByUsername(username)) {
                     return 'OAuthCreateAccountCommand.username.error.unique'
