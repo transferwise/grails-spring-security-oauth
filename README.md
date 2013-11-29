@@ -44,7 +44,7 @@ Install the plugin
 
 then, follow Spring Security Core and OAuth plugins documentation.
 
-Sample configuration for OAuth plugin:
+Sample configuration for OAuth plugin (each provider needs the proper spring-security-oauth-* plugin):
 
 ```groovy
 oauth {
@@ -66,8 +66,6 @@ oauth {
             failureUri = '/oauth/twitter/error'
             callback = "${baseURL}/oauth/twitter/callback"
         }
-
-        // 
         linkedin {
             api = org.scribe.builder.api.LinkedInApi
             key = 'oauth_linkedin_key'
@@ -76,8 +74,6 @@ oauth {
             failureUri = '/oauth/linkedin/error'
             callback = "${baseURL}/oauth/linkedin/callback"
         }
-
-        /* depends on spring-security-oauth-google extension */
 
         // for Google OAuth 1.0
         google {
@@ -112,13 +108,7 @@ Example:
 
     grails s2-init-oauth com.yourapp OAuthID
 
-that creates:
-
-- the domain class `com.yourapp.OAuthID`
-
-- the controller class `com.yourapp.SpringSecurityOAuthController`
-
-- the view `springSecurityOAuth/askToLinkOrCreateAccount.gsp`
+that creates the domain class `com.yourapp.OAuthID`
 
 Finally, add
 

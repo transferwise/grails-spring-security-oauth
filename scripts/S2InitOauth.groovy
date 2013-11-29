@@ -46,9 +46,9 @@ target(s2InitOauth: 'Initializes OAuth artifacts for the Spring Security OAuth p
 
     printMessage """
    *******************************************************
-   * Created domain class, controllers, and GSPs. Your   *
-   * grails-app/conf/Config.groovy has been updated with *
-   * the class name of the configured domain class;      *
+   * Created domain class.                               *
+   * Your grails-app/conf/Config.groovy has been updated *
+   * with the class name of the configured domain class; *
    * please verify that the values are correct.          *
    *******************************************************
    """
