@@ -26,9 +26,11 @@ import org.springframework.security.core.GrantedAuthority
  * from which dedicated provider tokens can extract extra information such as the
  * principal.
  *
- * @author Mihai CAZACU(cazacugmihai@gmail.com)
+ * @author <a href='mailto:cazacugmihai@gmail.com'>Mihai Cazacu</a>
  */
 abstract class OAuthToken extends AbstractAuthenticationToken {
+
+    private static final long serialVersionUID = 71500862412812683L;
 
     protected Token accessToken
     protected Map tokenParams
@@ -62,6 +64,8 @@ abstract class OAuthToken extends AbstractAuthenticationToken {
     abstract String getProviderName()
 
     abstract String getSocialId()
+
+    abstract String getScreenName()
 
     /**
      * Returns the parameters in the OAuth access token as a map.

@@ -7,8 +7,8 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 */
 class SpringSecurityOauthGrailsPlugin {
     def version = "2.0.2"
-    def grailsVersion = "1.2.2 > *"
-    def dependsOn = [springSecurityCore: '2.0-RC2 > *', oauth: "2.0 > *"]
+    def grailsVersion = "2.0 > *"
+    def dependsOn = [springSecurityCore: '2.0-RC2 > *', oauth: "2.3"]
     def pluginExcludes = [
             "web-app/css",
             "web-app/images",
