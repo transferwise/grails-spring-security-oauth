@@ -33,7 +33,7 @@ into existing applications and a host of utility functions to make things like "
         [name: "Enrico Comiti", email: "enrico@comiti.name"],
         [name: "Alexey Zhokhov", email: "donbeave@gmail.com"]]
     def issueManagement = [system: "JIRA", url: "http://jira.grails.org/browse/GPSPRINGSECURITYOAUTH"]
-    def scm = [url: 'https://github.com/grails-plugins/grails-spring-security-oauth/']
+    def scm = [url: 'https://github.com/enr/grails-spring-security-oauth/']
 
     def doWithSpring = {
         def conf = SpringSecurityUtils.securityConfig
