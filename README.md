@@ -44,6 +44,24 @@ Install the plugin
 
 then, follow Spring Security Core and OAuth plugins documentation.
 
+Sample configuration for Spring Security Core request mapping:
+
+```groovy
+grails.plugin.springsecurity.securityConfigType = "InterceptUrlMap"
+grails.plugin.springsecurity.interceptUrlMap = [
+    '/':                ['permitAll'],
+    '/index':           ['permitAll'],
+    '/index.gsp':       ['permitAll'],
+    '/**/js/**':        ['permitAll'],
+    '/**/css/**':       ['permitAll'],
+    '/**/images/**':    ['permitAll'],
+    '/**/favicon.ico':  ['permitAll'],
+    '/login/**':        ['permitAll'],
+    '/logout/**':       ['permitAll'],
+    '/oauth/**':        ['permitAll']
+]
+```
+
 Sample configuration for OAuth plugin (each provider needs the proper spring-security-oauth-* plugin):
 
 ```groovy
@@ -110,7 +128,7 @@ Example:
 
 that creates the domain class `com.yourapp.OAuthID`
 
-Finally, add
+Finally, add:
 
 ```groovy
 static hasMany = [oAuthIDs: OAuthID]
@@ -143,6 +161,7 @@ Extensions
 * [VK][spring-security-oauth-vkontakte-plugin]
 * [Weibo][spring-security-oauth-weibo-plugin]
 * [Yahoo][spring-security-oauth-yahoo-plugin]
+* [Dailymotion][spring-security-oauth-dailymotion-plugin]
 
 That's it!
 
@@ -155,3 +174,4 @@ That's it!
 [spring-security-oauth-vkontakte-plugin]: https://github.com/donbeave/grails-spring-security-oauth-vkontakte
 [spring-security-oauth-weibo-plugin]: https://github.com/donbeave/grails-spring-security-oauth-weibo
 [spring-security-oauth-yahoo-plugin]: https://github.com/donbeave/grails-spring-security-oauth-yahoo
+[spring-security-oauth-dailymotion-plugin]: https://github.com/tamershahin/grails-spring-security-oauth-dailymotion
