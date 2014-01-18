@@ -166,7 +166,7 @@ Extensions
 That's it!
 
 [spring-security-plugin]: http://grails.org/plugin/spring-security-core
-[oauth-plugin]: http://grails.org/plugin/oauth-scribe
+[oauth-plugin]: http://grails.org/plugin/oauth
 [spring-security-oauth-facebook-plugin]: https://github.com/donbeave/grails-spring-security-oauth-facebook
 [spring-security-oauth-google-plugin]: https://github.com/donbeave/grails-spring-security-oauth-google
 [spring-security-oauth-linkedin-plugin]: https://github.com/donbeave/grails-spring-security-oauth-linkedin
