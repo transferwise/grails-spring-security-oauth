@@ -16,10 +16,9 @@
 package grails.plugin.springsecurity.oauth
 
 import grails.plugin.springsecurity.oauth.OAuthToken
+import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.userdetails.GormUserDetailsService
 import grails.plugin.springsecurity.userdetails.GrailsUser
-import grails.plugin.springsecurity.SpringSecurityUtils
-import org.springframework.security.core.authority.GrantedAuthorityImpl
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.savedrequest.DefaultSavedRequest
 
@@ -34,6 +33,7 @@ class SpringSecurityOAuthController {
     def grailsApplication
     def oauthService
     def springSecurityService
+    def springSecurityOAuthService
 
     /**
      * This can be used as a callback for a successful OAuth authentication
@@ -60,28 +60,29 @@ class SpringSecurityOAuthController {
             renderError 500, "No OAuth token in the session for provider '${params.provider}'!"
             return
         }
-
         // Create the relevant authentication token and attempt to log in.
-        OAuthToken oAuthToken = createAuthToken(params.provider, session[sessionKey])
+        OAuthToken oAuthToken = springSecurityOAuthService.createAuthToken(params.provider, session[sessionKey])
 
         if (oAuthToken.principal instanceof GrailsUser) {
-            authenticateAndRedirect(oAuthToken, defaultTargetUrl)
+            authenticateAndRedirect(oAuthToken, getDefaultTargetUrl())
         } else {
             // This OAuth account hasn't been registered against an internal
             // account yet. Give the oAuthID the opportunity to create a new
             // internal account or link to an existing one.
             session[SPRING_SECURITY_OAUTH_TOKEN] = oAuthToken
 
-            def redirectUrl = SpringSecurityUtils.securityConfig.oauth.registration.askToLinkOrCreateAccountUri
-            assert redirectUrl, "grails.plugin.springsecurity.oauth.registration.askToLinkOrCreateAccountUri" +
-                    " configuration option must be set!"
+            def redirectUrl = springSecurityOAuthService.getAskToLinkOrCreateAccountUri()
+            if (!redirectUrl) {
+                renderError 500, "grails.plugin.springsecurity.oauth.registration.askToLinkOrCreateAccountUri configuration option must be set!"
+                return
+            }
             log.debug "Redirecting to askToLinkOrCreateAccountUri: ${redirectUrl}"
             redirect(redirectUrl instanceof Map ? redirectUrl : [uri: redirectUrl])
         }
     }
 
     def onFailure() {
-        authenticateAndRedirect(null, defaultTargetUrl)
+        authenticateAndRedirect(null, getDefaultTargetUrl())
     }
 
     def askToLinkOrCreateAccount() {
@@ -91,8 +92,8 @@ class SpringSecurityOAuthController {
             assert oAuthToken, "There is no auth token in the session!"
             currentUser.addToOAuthIDs(provider: oAuthToken.providerName, accessToken: oAuthToken.socialId, user: currentUser)
             if (currentUser.validate() && currentUser.save()) {
-                oAuthToken = updateOAuthToken(oAuthToken, currentUser)
-                authenticateAndRedirect(oAuthToken, defaultTargetUrl)
+                oAuthToken = springSecurityOAuthService.updateOAuthToken(oAuthToken, currentUser)
+                authenticateAndRedirect(oAuthToken, getDefaultTargetUrl())
                 return
             }
         }
@@ -107,12 +108,13 @@ class SpringSecurityOAuthController {
         assert oAuthToken, "There is no auth token in the session!"
 
         if (request.post) {
+            def User = springSecurityOAuthService.lookupUserClass()
             boolean linked = command.validate() && User.withTransaction { status ->
-                def user = lookupUserClass().findByUsernameAndPassword(command.username, springSecurityService.encodePassword(command.password))
+                def user = User.findByUsernameAndPassword(command.username, springSecurityService.encodePassword(command.password))
                 if (user) {
                     user.addToOAuthIDs(provider: oAuthToken.providerName, accessToken: oAuthToken.socialId, user: user)
                     if (user.validate() && user.save()) {
-                        oAuthToken = updateOAuthToken(oAuthToken, user)
+                        oAuthToken = springSecurityOAuthService.updateOAuthToken(oAuthToken, user)
                         return true
                     }
                 } else {
@@ -124,7 +126,7 @@ class SpringSecurityOAuthController {
             }
 
             if (linked) {
-                authenticateAndRedirect(oAuthToken, defaultTargetUrl)
+                authenticateAndRedirect(oAuthToken, getDefaultTargetUrl())
                 return
             }
         }
@@ -141,9 +143,9 @@ class SpringSecurityOAuthController {
             if (!springSecurityService.loggedIn) {
                 def config = SpringSecurityUtils.securityConfig
 
-                def User = lookupUserClass()
+                def User = springSecurityOAuthService.lookupUserClass()
                 boolean created = command.validate() && User.withTransaction { status ->
-                    def user = lookupUserClass().newInstance()
+                    def user = springSecurityOAuthService.lookupUserClass().newInstance()
                     //User user = new User(username: command.username, password: command.password1, enabled: true)
                     user.username = command.username
                     user.password = command.password1
@@ -156,18 +158,18 @@ class SpringSecurityOAuthController {
                         status.setRollbackOnly()
                         return false
                     }
-                    def UserRole = lookupUserRoleClass()
-                    def Role = lookupRoleClass()
+                    def UserRole = springSecurityOAuthService.lookupUserRoleClass()
+                    def Role = springSecurityOAuthService.lookupRoleClass()
                     for (roleName in config.oauth.registration.roleNames) {
                         UserRole.create user, Role.findByAuthority(roleName)
                     }
 
-                    oAuthToken = updateOAuthToken(oAuthToken, user)
+                    oAuthToken = springSecurityOAuthService.updateOAuthToken(oAuthToken, user)
                     return true
                 }
 
                 if (created) {
-                    authenticateAndRedirect(oAuthToken, defaultTargetUrl)
+                    authenticateAndRedirect(oAuthToken, getDefaultTargetUrl())
                     return
                 }
             }
@@ -176,159 +178,10 @@ class SpringSecurityOAuthController {
         render view: 'askToLinkOrCreateAccount', model: [createAccountCommand: command]
     }
 
-    // utils
-
     protected renderError(code, msg) {
         log.warn "${msg} (returning ${code})"
         render status: code, text: msg
     }
-
-    protected OAuthToken createAuthToken(providerName, scribeToken) {
-        def providerService = grailsApplication.mainContext.getBean("${providerName}SpringSecurityOAuthService")
-        OAuthToken oAuthToken = providerService.createAuthToken(scribeToken)
-        
-        def OAuthID = lookupOAuthIdClass()
-        def oAuthID = OAuthID.findByProviderAndAccessToken(oAuthToken.providerName, oAuthToken.socialId)
-        if (oAuthID) {
-            updateOAuthToken(oAuthToken, oAuthID.user)
-        }
-
-        return oAuthToken
-    }
-
-    protected OAuthToken updateOAuthToken(OAuthToken oAuthToken, user) {
-        def conf = SpringSecurityUtils.securityConfig
-
-        // user
-
-        String usernamePropertyName = conf.userLookup.usernamePropertyName
-        String passwordPropertyName = conf.userLookup.passwordPropertyName
-        String enabledPropertyName = conf.userLookup.enabledPropertyName
-        String accountExpiredPropertyName = conf.userLookup.accountExpiredPropertyName
-        String accountLockedPropertyName = conf.userLookup.accountLockedPropertyName
-        String passwordExpiredPropertyName = conf.userLookup.passwordExpiredPropertyName
-
-        String username = user."${usernamePropertyName}"
-        String password = user."${passwordPropertyName}"
-        boolean enabled = enabledPropertyName ? user."${enabledPropertyName}" : true
-        boolean accountExpired = accountExpiredPropertyName ? user."${accountExpiredPropertyName}" : false
-        boolean accountLocked = accountLockedPropertyName ? user."${accountLockedPropertyName}" : false
-        boolean passwordExpired = passwordExpiredPropertyName ? user."${passwordExpiredPropertyName}" : false
-
-        // authorities
-
-        String authoritiesPropertyName = conf.userLookup.authoritiesPropertyName
-        String authorityPropertyName = conf.authority.nameField
-        Collection<?> userAuthorities = user."${authoritiesPropertyName}"
-        def authorities = userAuthorities.collect { new GrantedAuthorityImpl(it."${authorityPropertyName}") }
-
-        oAuthToken.principal = new GrailsUser(username, password, enabled, !accountExpired, !passwordExpired,
-                !accountLocked, authorities ?: [GormUserDetailsService.NO_ROLE], user.id)
-        oAuthToken.authorities = authorities
-        oAuthToken.authenticated = true
-
-        return oAuthToken
-    }
-
-/*
-    private def updateUser(User user, OAuthToken oAuthToken) {
-        if (!user.validate()) {
-            return
-        }
-
-        if (oAuthToken instanceof TwitterOAuthToken) {
-            TwitterOAuthToken twitterOAuthToken = (TwitterOAuthToken) oAuthToken
-
-            if (!user.username) {
-                user.username = twitterOAuthToken.twitterProfile.screenName
-                if (!user.validate()) {
-                    user.username = null
-                }
-            }
-
-            if (!user.firstName || !user.lastName) {
-                def names = twitterOAuthToken.twitterProfile.name?.split(' ')
-                if (names) {
-                    if (!user.lastName) {
-                        user.lastName = names[0]
-                        if (!user.validate()) {
-                            user.lastName = null
-                        }
-                    }
-
-                    if (!user.firstName) {
-                        user.firstName = names[-1]
-                        if (!user.validate()) {
-                            user.firstName = null
-                        }
-                    }
-                }
-            }
-        } else if (oAuthToken instanceof FacebookOAuthToken) {
-            FacebookOAuthToken facebookOAuthToken = (FacebookOAuthToken) oAuthToken
-
-            if (!user.username) {
-                user.username = facebookOAuthToken.facebookProfile.username
-                if (!user.validate()) {
-                    user.username = null
-                }
-            }
-
-            if (!user.email) {
-                user.email = facebookOAuthToken.facebookProfile.email
-                if (!user.validate()) {
-                    user.email = null
-                }
-            }
-
-            if (!user.lastName) {
-                user.lastName = facebookOAuthToken.facebookProfile.lastName
-                if (!user.validate()) {
-                    user.lastName = null
-                }
-            }
-
-            if (!user.firstName) {
-                user.firstName = facebookOAuthToken.facebookProfile.firstName
-                if (!user.validate()) {
-                    user.firstName = null
-                }
-            }
-        } else if (oAuthToken instanceof GoogleOAuthToken) {
-            GoogleOAuthToken googleOAuthToken = (GoogleOAuthToken) oAuthToken
-
-            if (!user.email) {
-                user.email = googleOAuthToken.email
-                if (!user.validate()) {
-                    user.email = null
-                }
-            }
-        } else if (oAuthToken instanceof YahooOAuthToken) {
-            YahooOAuthToken yahooOAuthToken = (YahooOAuthToken) oAuthToken
-
-            if (!user.username) {
-                user.username = yahooOAuthToken.profile.nickname
-                if (!user.validate()) {
-                    user.username = null
-                }
-            }
-
-            if (!user.lastName) {
-                user.lastName = yahooOAuthToken.profile.familyName
-                if (!user.validate()) {
-                    user.lastName = null
-                }
-            }
-
-            if (!user.firstName) {
-                user.firstName = yahooOAuthToken.profile.givenName
-                if (!user.validate()) {
-                    user.firstName = null
-                }
-            }
-        }
-    }
-*/
 
     protected Map getDefaultTargetUrl() {
         def config = SpringSecurityUtils.securityConfig
@@ -349,37 +202,6 @@ class SpringSecurityOAuthController {
         redirect(redirectUrl instanceof Map ? redirectUrl : [uri: redirectUrl])
     }
 
-    protected String lookupUserClassName() {
-        SpringSecurityUtils.securityConfig.userLookup.userDomainClassName
-    }
-
-    protected Class<?> lookupUserClass() {
-        grailsApplication.getDomainClass(lookupUserClassName()).clazz
-    }
-
-    protected String lookupRoleClassName() {
-        SpringSecurityUtils.securityConfig.authority.className
-    }
-
-    protected Class<?> lookupRoleClass() {
-        grailsApplication.getDomainClass(lookupRoleClassName()).clazz
-    }
-
-    protected String lookupUserRoleClassName() {
-        SpringSecurityUtils.securityConfig.userLookup.authorityJoinClassName
-    }
-
-    protected Class<?> lookupUserRoleClass() {
-        grailsApplication.getDomainClass(lookupUserRoleClassName()).clazz
-    }
-
-    protected String lookupOAuthIdClassName() {
-        SpringSecurityUtils.securityConfig.oauth.domainClass
-    }
-
-    protected Class<?> lookupOAuthIdClass() {
-        grailsApplication.getDomainClass(lookupOAuthIdClassName()).clazz
-    }
 }
 
 class OAuthCreateAccountCommand {
