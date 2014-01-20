@@ -76,6 +76,6 @@ abstract class OAuthToken extends AbstractAuthenticationToken {
         if (json) {
           return JSON.parse(data)
         }
-        return data.split('&').collectEntries { it.split('=') as List }
+        return data?.split('&')?.collectEntries { it.split('=') as List }
     }
 }

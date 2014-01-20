@@ -19,9 +19,3 @@ OAuthLinkAccountCommand.${passwordPropertyName}.label = ${passwordCapPropertyNam
 OAuthLinkAccountCommand.${passwordPropertyName}.nullable = ${passwordCapPropertyName} is required.
 OAuthLinkAccountCommand.${passwordPropertyName}.blank = ${passwordCapPropertyName} is required.
 
-springSecurity.oauth.registration.link.not.exists = No user was found with this {0} account.
-springSecurity.oauth.registration.login.legend = Link to an existing account
-springSecurity.oauth.registration.login.button = Login
-springSecurity.oauth.registration.create.legend = Create a new account
-springSecurity.oauth.registration.create.button = Create
-springSecurity.oauth.registration.back = Back to login page
