@@ -1,15 +1,10 @@
 *.iws
-*Db.properties
-*Db.script
 .settings
-eclipse
-stacktrace.log
-target
-/plugins
+*.log
+/target
 /web-app
 grails-app/i18n
 *~
 plugin.xml
 *.zip
 *.zip.sha1
-

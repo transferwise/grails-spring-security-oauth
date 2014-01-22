@@ -12,9 +12,9 @@ import org.scribe.model.Token
 class SpringSecurityOAuthTagLibSpec extends Specification {
 
     def springSecurityService
-    
+
     def oauthService
-    
+
     def setup() {
         springSecurityService = [:]
         oauthService = [:]
@@ -44,7 +44,7 @@ class SpringSecurityOAuthTagLibSpec extends Specification {
             'linkedin'  | _
             'twitter'   | _
     }
-    
+
     def "ifLoggedInWith should print empty string if session is invalid"() {
         given:
             def sessionKey = "oas:${provider}"
@@ -81,7 +81,7 @@ class SpringSecurityOAuthTagLibSpec extends Specification {
         then:
             renderedContent == ''
     }
-    
+
     def "ifNotLoggedInWith should print body if user is not logged in"() {
         given:
             def message = "Not_Logged_In"

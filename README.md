@@ -32,17 +32,13 @@ In `BuildConfig.groovy`, add the dependency to "plugins" section:
         //...
     }
 
-The version should be changed to reflect the actual version you would like to use. 
+Change the version to reflect the actual version you would like to use.
 
 
 Usage
 -----
 
-Install the plugin
-
-    grails install-plugin spring-security-oauth
-
-then, follow Spring Security Core and OAuth plugins documentation.
+Install the plugin as described above by adding a dependency in BuildConfig.groovy. Then follow Spring Security Core and OAuth plugins documentation.
 
 Sample configuration for Spring Security Core request mapping:
 

@@ -15,12 +15,10 @@
  */
 package grails.plugin.springsecurity.oauth
 
-import grails.plugin.springsecurity.oauth.OAuthToken
 import grails.plugin.springsecurity.SpringSecurityUtils
-import grails.plugin.springsecurity.userdetails.GormUserDetailsService
 import grails.plugin.springsecurity.userdetails.GrailsUser
+
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.web.savedrequest.DefaultSavedRequest
 
 /**
  * Simple helper controller for handling OAuth authentication and integrating it
@@ -30,7 +28,6 @@ class SpringSecurityOAuthController {
 
     public static final String SPRING_SECURITY_OAUTH_TOKEN = 'springSecurityOAuthToken'
 
-    def grailsApplication
     def oauthService
     def springSecurityService
     def springSecurityOAuthService

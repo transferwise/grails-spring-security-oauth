@@ -1,18 +1,16 @@
 package grails.plugin.springsecurity.oauth
 
-import grails.transaction.Transactional
-
-import grails.plugin.springsecurity.oauth.OAuthToken
 import grails.plugin.springsecurity.SpringSecurityUtils
-import org.springframework.security.core.authority.GrantedAuthorityImpl
+import grails.plugin.springsecurity.userdetails.GormUserDetailsService
 import grails.plugin.springsecurity.userdetails.GrailsUser
 
-@Transactional
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+
 class SpringSecurityOAuthService {
 
-	def grailsApplication
+    def grailsApplication
 
-    public OAuthToken createAuthToken(providerName, scribeToken) {
+    OAuthToken createAuthToken(providerName, scribeToken) {
         def providerService = grailsApplication.mainContext.getBean("${providerName}SpringSecurityOAuthService")
         OAuthToken oAuthToken = providerService.createAuthToken(scribeToken)
         def OAuthID = lookupOAuthIdClass()
@@ -23,7 +21,7 @@ class SpringSecurityOAuthService {
         return oAuthToken
     }
 
-    public OAuthToken updateOAuthToken(OAuthToken oAuthToken, user) {
+    OAuthToken updateOAuthToken(OAuthToken oAuthToken, user) {
         def conf = SpringSecurityUtils.securityConfig
 
         // user
@@ -47,7 +45,7 @@ class SpringSecurityOAuthService {
         String authoritiesPropertyName = conf.userLookup.authoritiesPropertyName
         String authorityPropertyName = conf.authority.nameField
         Collection<?> userAuthorities = user."${authoritiesPropertyName}"
-        def authorities = userAuthorities.collect { new GrantedAuthorityImpl(it."${authorityPropertyName}") }
+        def authorities = userAuthorities.collect { new SimpleGrantedAuthority(it."${authorityPropertyName}") }
 
         oAuthToken.principal = new GrailsUser(username, password, enabled, !accountExpired, !passwordExpired,
                 !accountLocked, authorities ?: [GormUserDetailsService.NO_ROLE], user.id)

@@ -16,6 +16,7 @@
 package grails.plugin.springsecurity.oauth
 
 import grails.converters.JSON
+
 import org.scribe.model.Token
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
@@ -30,7 +31,7 @@ import org.springframework.security.core.GrantedAuthority
  */
 abstract class OAuthToken extends AbstractAuthenticationToken {
 
-    private static final long serialVersionUID = 71500862412812683L;
+    private static final long serialVersionUID = 1
 
     protected Token accessToken
     protected Map tokenParams
