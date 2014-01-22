@@ -1,13 +1,10 @@
 package grails.plugin.springsecurity.oauth
 
-import grails.transaction.Transactional
-
 import grails.plugin.springsecurity.oauth.OAuthToken
 import grails.plugin.springsecurity.SpringSecurityUtils
 import org.springframework.security.core.authority.GrantedAuthorityImpl
 import grails.plugin.springsecurity.userdetails.GrailsUser
 
-@Transactional
 class SpringSecurityOAuthService {
 
 	def grailsApplication
