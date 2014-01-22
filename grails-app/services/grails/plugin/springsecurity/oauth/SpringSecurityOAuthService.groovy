@@ -4,7 +4,7 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.userdetails.GormUserDetailsService
 import grails.plugin.springsecurity.userdetails.GrailsUser
 
-import org.springframework.security.core.authority.GrantedAuthorityImpl
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 
 class SpringSecurityOAuthService {
 
@@ -45,7 +45,7 @@ class SpringSecurityOAuthService {
         String authoritiesPropertyName = conf.userLookup.authoritiesPropertyName
         String authorityPropertyName = conf.authority.nameField
         Collection<?> userAuthorities = user."${authoritiesPropertyName}"
-        def authorities = userAuthorities.collect { new GrantedAuthorityImpl(it."${authorityPropertyName}") }
+        def authorities = userAuthorities.collect { new SimpleGrantedAuthority(it."${authorityPropertyName}") }
 
         oAuthToken.principal = new GrailsUser(username, password, enabled, !accountExpired, !passwordExpired,
                 !accountLocked, authorities ?: [GormUserDetailsService.NO_ROLE], user.id)
