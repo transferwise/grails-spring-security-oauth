@@ -13,7 +13,7 @@ class SpringSecurityOAuthTagLib {
      * Renders the body if the user is authenticated with the given provider.
      */
     def ifLoggedInWith = { attrs, body ->
-        def provider = attrs.remove('provider')
+        def provider = attrs.provider
         if (currentUserIsLoggedInWithProvider(provider)) {
             out << body()
         }
@@ -23,12 +23,12 @@ class SpringSecurityOAuthTagLib {
      * Renders the body if the user is not authenticated with the given provider.
      */
     def ifNotLoggedInWith = { attrs, body ->
-        def provider = attrs.remove('provider')
+        def provider = attrs.provider
         if (!currentUserIsLoggedInWithProvider(provider)) {
             out << body()
         }
     }
-    
+
     private boolean currentUserIsLoggedInWithProvider(String provider) {
         if (!provider || !springSecurityService.isLoggedIn()) {
             return false

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 security {
-	oauth {
+    oauth {
         active = true
 
         printStatusMessages = true
@@ -23,10 +23,10 @@ security {
             oAuthIdsPropertyName = 'oAuthIDs'
         }
 
-		registration {
+        registration {
             askToLinkOrCreateAccountUri = '/oauth/askToLinkOrCreateAccount'
             userDomainClassName = null
-			roleNames = ['ROLE_USER']
-		}
-	}
+            roleNames = ['ROLE_USER']
+        }
+    }
 }

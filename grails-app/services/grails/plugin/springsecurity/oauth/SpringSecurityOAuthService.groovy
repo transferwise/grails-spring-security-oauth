@@ -1,15 +1,16 @@
 package grails.plugin.springsecurity.oauth
 
-import grails.plugin.springsecurity.oauth.OAuthToken
 import grails.plugin.springsecurity.SpringSecurityUtils
-import org.springframework.security.core.authority.GrantedAuthorityImpl
+import grails.plugin.springsecurity.userdetails.GormUserDetailsService
 import grails.plugin.springsecurity.userdetails.GrailsUser
+
+import org.springframework.security.core.authority.GrantedAuthorityImpl
 
 class SpringSecurityOAuthService {
 
-	def grailsApplication
+    def grailsApplication
 
-    public OAuthToken createAuthToken(providerName, scribeToken) {
+    OAuthToken createAuthToken(providerName, scribeToken) {
         def providerService = grailsApplication.mainContext.getBean("${providerName}SpringSecurityOAuthService")
         OAuthToken oAuthToken = providerService.createAuthToken(scribeToken)
         def OAuthID = lookupOAuthIdClass()
@@ -20,7 +21,7 @@ class SpringSecurityOAuthService {
         return oAuthToken
     }
 
-    public OAuthToken updateOAuthToken(OAuthToken oAuthToken, user) {
+    OAuthToken updateOAuthToken(OAuthToken oAuthToken, user) {
         def conf = SpringSecurityUtils.securityConfig
 
         // user

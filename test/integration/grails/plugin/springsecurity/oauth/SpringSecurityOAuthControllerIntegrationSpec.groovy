@@ -8,7 +8,7 @@ import spock.lang.*
 
 @Unroll
 class SpringSecurityOAuthControllerIntegrationSpec extends Specification {
-  
+
     SpringSecurityOAuthController controller
 
     def oauthService
@@ -17,7 +17,7 @@ class SpringSecurityOAuthControllerIntegrationSpec extends Specification {
         controller = new SpringSecurityOAuthController()
         controller.oauthService = oauthService
     }
-      
+
     def "onSuccess gives 400 if provider is missing"() {
         given:
             controller.params.provider = ''

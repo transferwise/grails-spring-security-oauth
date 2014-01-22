@@ -14,10 +14,8 @@
  */
 
 import grails.util.GrailsNameUtils
-import grails.plugin.springsecurity.SpringSecurityUtils
 
-includeTargets << new File("$springSecurityOauthPluginDir/scripts/_OauthCommon.groovy")
-//includeTargets << grailsScript('_GrailsBootstrap')
+includeTargets << new File(springSecurityOauthPluginDir, 'scripts/_OauthCommon.groovy')
 
 USAGE = """
 Usage: grails s2-init-oauth [domain-class-package] [oauthid-class-name]

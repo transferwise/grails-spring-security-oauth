@@ -9,17 +9,12 @@ class SpringSecurityOauthGrailsPlugin {
     def version = "2.1.0-RC1"
     def grailsVersion = "2.0 > *"
     def pluginExcludes = [
-            "web-app/css",
-            "web-app/images",
-            "web-app/js/prototype",
-            "web-app/js/application.js"
+            "web-app/*"
     ]
 
     def title = "Spring Security OAuth plugin"
-    def author = "Mihai Cazacu, Enrico Comiti, Alexey Zhokhov"
-    def authorEmail = "cazacugmihai@gmail.com"
     def description = '''Adds OAuth-based authentication to the
-[Spring Security plugin|http://grails.org/plugin/spring-security-core] using the 
+[Spring Security plugin|http://grails.org/plugin/spring-security-core] using the
 [OAuth plugin|http://grails.org/plugin/oauth]. This plugin provides an OAuth realm that can easily be integrated
 into existing applications and a host of utility functions to make things like "log in with Twitter" almost trivial.'''
 
@@ -31,7 +26,7 @@ into existing applications and a host of utility functions to make things like "
         [name: "Mihai Cazacu", email: "cazacugmihai@gmail.com"],
         [name: "Enrico Comiti", email: "enrico@comiti.name"],
         [name: "Alexey Zhokhov", email: "donbeave@gmail.com"]]
-    def issueManagement = [system: "JIRA", url: "http://jira.grails.org/browse/GPSPRINGSECURITYOAUTH"]
+    def issueManagement = [system: 'GITHUB', url: 'https://github.com/enr/grails-spring-security-oauth/issues']
     def scm = [url: 'https://github.com/enr/grails-spring-security-oauth/']
 
     def doWithSpring = {
@@ -57,5 +52,4 @@ into existing applications and a host of utility functions to make things like "
             println '... finished configuring Spring Security OAuth\n'
         }
     }
-
 }
