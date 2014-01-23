@@ -7,12 +7,16 @@ Adds OAuth-based authentication to the [Spring Security plugin][spring-security-
 
 This plugin provides an OAuth realm that can easily be integrated into existing applications and a host of utility functions to make things like "log in with Twitter" almost trivial.
 
-Upgrade from 2.0.1.1 to 2.0.2
------------------------------
+
+Changelog
+---------
 
 From 2.0.2 version provider's service and token are moved into separate plugin, example:
 
     ':spring-security-oauth-google:0.1'
+
+From 2.1 (not yet released) controller and view are not anymore created in the app but are available as plugin artefacts.
+
 
 Installation
 ------------
