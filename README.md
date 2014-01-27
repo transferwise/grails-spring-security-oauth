@@ -95,7 +95,7 @@ oauth {
             callback = "${baseURL}/oauth/linkedin/callback"
         }
 
-        // for Google OAuth 1.0
+        // for Google OAuth 1.0 DEPRECATED
         google {
             api = org.scribe.builder.api.GoogleApi
             key = 'oauth_google_key'
@@ -108,7 +108,7 @@ oauth {
 
         // for Google OAuth 2.0
         google {
-            api = org.scribe.builder.api.GoogleApi20
+            api = org.grails.plugin.springsecurity.oauth.GoogleApi20
             key = 'oauth_google_key'
             secret = 'oauth_google_secret'
             successUri = '/oauth/google/success'
