@@ -65,6 +65,8 @@ grails.plugin.springsecurity.interceptUrlMap = [
 Sample configuration for OAuth plugin (each provider needs the proper spring-security-oauth-* plugin):
 
 ```groovy
+def appName = grails.util.Metadata.current.'app.name'
+def baseURL = grails.serverURL ?: "http://localhost:${System.getProperty('server.port', '8080')}/${appName}"
 oauth {
     debug = true
     providers {
