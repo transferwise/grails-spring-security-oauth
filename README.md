@@ -7,21 +7,33 @@ Adds OAuth-based authentication to the [Spring Security plugin][spring-security-
 
 This plugin provides an OAuth realm that can easily be integrated into existing applications and a host of utility functions to make things like "log in with Twitter" almost trivial.
 
+**This README refers to the code currently in the master branch, maybe not yet released.**
+
+Please, see [Grails plugin portal][s2oauth-grails-website] for instructions about the actual released version.
+
 
 Changelog
 ---------
 
-From 2.0.2 version provider's service and token are moved into separate plugin, example:
+**2.1 (not yet released)**
+
+Controller and view are not anymore created in the app but are available as plugin artefacts.
+
+View has a configurable layout via `grails.plugin.springsecurity.oauth.layout` configuration key.
+
+**2.0.2**
+
+Version provider's service and token are moved into separate plugin, example:
 
     ':spring-security-oauth-google:0.1'
-
-From 2.1 (not yet released) controller and view are not anymore created in the app but are available as plugin artefacts.
 
 
 Installation
 ------------
 
 In `BuildConfig.groovy`, add the dependency to "plugins" section:
+
+```groovy
 
     plugins {
         //...
@@ -35,6 +47,7 @@ In `BuildConfig.groovy`, add the dependency to "plugins" section:
         compile ':spring-security-oauth-yahoo:0.1'
         //...
     }
+```
 
 Change the version to reflect the actual version you would like to use.
 
@@ -167,6 +180,7 @@ Extensions
 
 That's it!
 
+[s2oauth-grails-website]: http://www.grails.org/plugin/spring-security-oauth
 [spring-security-plugin]: http://grails.org/plugin/spring-security-core
 [oauth-plugin]: http://grails.org/plugin/oauth
 [spring-security-oauth-facebook-plugin]: https://github.com/donbeave/grails-spring-security-oauth-facebook
