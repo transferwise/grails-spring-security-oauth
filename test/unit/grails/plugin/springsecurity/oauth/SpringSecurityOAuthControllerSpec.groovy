@@ -84,6 +84,7 @@ class SpringSecurityOAuthControllerSpec extends Specification {
             provider      |  responseCode
             'facebook'    |  302
     }
+
 }
 
 /*

@@ -55,6 +55,18 @@ class SpringSecurityOAuthService {
         return oAuthToken
     }
 
+    /**
+     * Returns if a user with the given username exists in database.
+     */
+    boolean usernameTaken(String username) {
+        def User = lookupUserClass()
+        User.withNewSession { session ->
+            if (username && User.countByUsername(username)) {
+                return 'OAuthCreateAccountCommand.username.error.unique'
+            }
+        }
+    }
+
     def getAskToLinkOrCreateAccountUri() {
         return SpringSecurityUtils.securityConfig.oauth.registration.askToLinkOrCreateAccountUri
     }

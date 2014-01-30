@@ -48,13 +48,13 @@ class SpringSecurityOAuthController {
         // Validate the 'provider' URL. Any errors here are either misconfiguration
         // or web crawlers (or malicious users).
         if (!params.provider) {
-            renderError 400, "The Spring Security OAuth callback URL must include the 'provider' URL parameter."
+            renderError(400, "The Spring Security OAuth callback URL must include the 'provider' URL parameter.", "onSuccess")
             return
         }
 
         def sessionKey = oauthService.findSessionKeyForAccessToken(params.provider)
         if (!session[sessionKey]) {
-            renderError 500, "No OAuth token in the session for provider '${params.provider}'!"
+            renderError(500, "Authentication error for provider '${params.provider}'", "No OAuth token in the session for provider '${params.provider}'!")
             return
         }
         // Create the relevant authentication token and attempt to log in.
@@ -70,7 +70,7 @@ class SpringSecurityOAuthController {
 
             def redirectUrl = springSecurityOAuthService.getAskToLinkOrCreateAccountUri()
             if (!redirectUrl) {
-                renderError 500, "grails.plugin.springsecurity.oauth.registration.askToLinkOrCreateAccountUri configuration option must be set!"
+                renderError(500, 'Internal error', "grails.plugin.springsecurity.oauth.registration.askToLinkOrCreateAccountUri configuration option must be set!")
                 return
             }
             log.debug "Redirecting to askToLinkOrCreateAccountUri: ${redirectUrl}"
@@ -86,7 +86,11 @@ class SpringSecurityOAuthController {
         if (springSecurityService.loggedIn) {
             def currentUser = springSecurityService.currentUser
             OAuthToken oAuthToken = session[SPRING_SECURITY_OAUTH_TOKEN]
-            assert oAuthToken, "There is no auth token in the session!"
+            if (!oAuthToken) {
+                renderError(500, 'Authentication error', 'askToLinkOrCreateAccount')
+                return
+            }
+            //assert oAuthToken, "There is no auth token in the session!"
             currentUser.addToOAuthIDs(provider: oAuthToken.providerName, accessToken: oAuthToken.socialId, user: currentUser)
             if (currentUser.validate() && currentUser.save()) {
                 oAuthToken = springSecurityOAuthService.updateOAuthToken(oAuthToken, currentUser)
@@ -102,7 +106,11 @@ class SpringSecurityOAuthController {
      */
     def linkAccount(OAuthLinkAccountCommand command) {
         OAuthToken oAuthToken = session[SPRING_SECURITY_OAUTH_TOKEN]
-        assert oAuthToken, "There is no auth token in the session!"
+        if (!oAuthToken) {
+            renderError(500, 'Authentication error', 'linkAccount')
+            return
+        }
+        //assert oAuthToken, "There is no auth token in the session!"
 
         if (request.post) {
             def User = springSecurityOAuthService.lookupUserClass()
@@ -134,7 +142,11 @@ class SpringSecurityOAuthController {
 
     def createAccount(OAuthCreateAccountCommand command) {
         OAuthToken oAuthToken = session[SPRING_SECURITY_OAUTH_TOKEN]
-        assert oAuthToken, "There is no auth token in the session!"
+        if (!oAuthToken) {
+            renderError(500, 'Authentication error', 'createAccount')
+            return
+        }
+        //assert oAuthToken, "There is no auth token in the session!"
 
         if (request.post) {
             if (!springSecurityService.loggedIn) {
@@ -175,9 +187,9 @@ class SpringSecurityOAuthController {
         render view: 'askToLinkOrCreateAccount', model: [createAccountCommand: command]
     }
 
-    protected renderError(code, msg) {
-        log.warn "${msg} (returning ${code})"
-        render status: code, text: msg
+    protected renderError(code, viewMessage, logMessage='') {
+        log.warn "${logMessage} ${viewMessage} (returning ${code})"
+        render status: code, text: viewMessage
     }
 
     protected Map getDefaultTargetUrl() {
@@ -203,7 +215,8 @@ class SpringSecurityOAuthController {
 
 class OAuthCreateAccountCommand {
 
-    def grailsApplication
+    //def grailsApplication
+    def springSecurityOAuthService
 
     String username
     String password1
@@ -211,11 +224,16 @@ class OAuthCreateAccountCommand {
 
     static constraints = {
         username blank: false, validator: { String username, command ->
+            /*
             def User = command.grailsApplication.getDomainClass(SpringSecurityUtils.securityConfig.userLookup.userDomainClassName).clazz
             User.withNewSession { session ->
                 if (username && User.countByUsername(username)) {
                     return 'OAuthCreateAccountCommand.username.error.unique'
                 }
+            }
+            */
+            if (command.springSecurityOAuthService.usernameTaken(username)) {
+                return 'OAuthCreateAccountCommand.username.error.unique'
             }
         }
         password1 blank: false, minSize: 8, maxSize: 64, validator: { password1, command ->
