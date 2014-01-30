@@ -1,6 +1,7 @@
 <head>
-    <meta name='layout' content='main'/>
-    <title>Create or Link Account</title>
+    <g:set var="layoutName" value="${grailsApplication.config.grails?.plugin?.springsecurity?.oauth?.layout}"/>
+    <meta name="layout" content="${layoutName ?: 'main'}"/>
+    <title>Create or Link Account ${layoutName}</title>
     <style type="text/css">
     fieldset {
         border: 1px solid green;
@@ -46,7 +47,7 @@
         <div class="errors">${flash.error}</div>
     </g:if>
 
-    <h4><g:message code="springSecurity.oauth.registration.link.not.exists" default="No user was found with this account." args="[session.springSecurityOAuthToken.providerName]"/></h4>
+    <h4><g:message code="springSecurity.oauth.registration.link.not.exists" default="No user was found with this account." args="[session.springSecurityOAuthToken?.providerName]"/></h4>
     <br/>
 
     <g:hasErrors bean="${createAccountCommand}">
