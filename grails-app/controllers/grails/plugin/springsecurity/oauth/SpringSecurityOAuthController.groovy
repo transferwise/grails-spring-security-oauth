@@ -17,11 +17,11 @@ package grails.plugin.springsecurity.oauth
 
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.userdetails.GrailsUser
-
+import org.springframework.web.servlet.ModelAndView
 import org.springframework.security.core.context.SecurityContextHolder
 
 /**
- * Simple helper controller for handling OAuth authentication and integrating it
+ * Simple controller for handling OAuth authentication and integrating it
  * into Spring Security.
  */
 class SpringSecurityOAuthController {
@@ -83,8 +83,10 @@ class SpringSecurityOAuthController {
     }
 
     def askToLinkOrCreateAccount() {
-        if (springSecurityService.loggedIn) {
-            def currentUser = springSecurityService.currentUser
+        println "hereeee"
+        if (springSecurityService.isLoggedIn()) {
+            println "loggedin...."
+            def currentUser = springSecurityService.getCurrentUser()
             OAuthToken oAuthToken = session[SPRING_SECURITY_OAUTH_TOKEN]
             if (!oAuthToken) {
                 renderError(500, 'Authentication error', 'askToLinkOrCreateAccount')
@@ -98,6 +100,9 @@ class SpringSecurityOAuthController {
                 return
             }
         }
+        //def provider = ...
+        //view: "", model: [message: "... args=provider"]
+        return new ModelAndView("/springSecurityOAuth/askToLinkOrCreateAccount", [:])
     }
 
     /**
@@ -223,7 +228,7 @@ class OAuthCreateAccountCommand {
     String password2
 
     static constraints = {
-        username blank: false, validator: { String username, command ->
+        username blank: false, minSize: 3, validator: { String username, command ->
             /*
             def User = command.grailsApplication.getDomainClass(SpringSecurityUtils.securityConfig.userLookup.userDomainClassName).clazz
             User.withNewSession { session ->

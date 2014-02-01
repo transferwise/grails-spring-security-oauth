@@ -27,7 +27,6 @@ class SpringSecurityOAuthControllerSpec extends Specification {
     def "onSuccess should respond 500 if askToLinkOrCreateAccountUri is not set"() {
         given:
             OAuthToken authToken = Mock()
-
             controller.springSecurityOAuthService = [createAuthToken: {p, t -> authToken}, getAskToLinkOrCreateAccountUri: { null } ]
             params.provider = provider
             def providerkey = "${provider}_oauth_session_key"
@@ -67,7 +66,6 @@ class SpringSecurityOAuthControllerSpec extends Specification {
             def token = Stub(Token) {
                 getRawResponse() >> "a=1&b=2"
             }
-
             OAuthToken authToken = new TestOAuthToken(token, false)
             controller.springSecurityOAuthService = [createAuthToken: {p, t -> authToken}, getAskToLinkOrCreateAccountUri: { "/askToLinkOrCreateAccountUri" } ]
             params.provider = provider
@@ -83,6 +81,15 @@ class SpringSecurityOAuthControllerSpec extends Specification {
         where:
             provider      |  responseCode
             'facebook'    |  302
+    }
+
+    def "askToLinkOrCreateAccount should return view if user is not logged in"() {
+        given:
+            controller.springSecurityService = [isLoggedIn: { false }]
+        when:
+            def mav = controller.askToLinkOrCreateAccount()
+        then:
+            mav.viewName == "/springSecurityOAuth/askToLinkOrCreateAccount"
     }
 
 }
