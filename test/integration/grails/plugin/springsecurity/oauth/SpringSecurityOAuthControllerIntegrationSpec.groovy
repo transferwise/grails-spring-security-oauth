@@ -18,13 +18,13 @@ class SpringSecurityOAuthControllerIntegrationSpec extends Specification {
         controller.oauthService = oauthService
     }
 
-    def "onSuccess gives 400 if provider is missing"() {
+    def "onSuccess throws exception if provider is missing"() {
         given:
             controller.params.provider = ''
         when:
             controller.onSuccess()
         then:
-            controller.response.status == 400
+            thrown OAuthLoginException
     }
 
 }

@@ -8,23 +8,23 @@ import grails.plugin.springsecurity.userdetails.GrailsUser
 @TestFor(SpringSecurityOAuthController)
 class SpringSecurityOAuthControllerSpec extends Specification {
 
-    def "onSuccess should respond with error code if request is missing data"() {
+    def "onSuccess should throw exception if request is missing data"() {
         given:
             params.provider = provider
             def oauthService = [findSessionKeyForAccessToken:{p -> 'no-such-key-in-session'}]
             controller.oauthService = oauthService
-        and:
+        when:
             controller.onSuccess()
-        expect:
-            response.status == responseCode
+        then:
+            thrown OAuthLoginException
         where:
-            provider      |  responseCode
-            ''            |  400
-            null          |  400
-            'facebook'    |  500
+            provider      |  _
+            ''            |  _
+            null          |  _
+            'facebook'    |  _
     }
 
-    def "onSuccess should respond 500 if askToLinkOrCreateAccountUri is not set"() {
+    def "onSuccess should throw exception if askToLinkOrCreateAccountUri is not set"() {
         given:
             OAuthToken authToken = Mock()
             controller.springSecurityOAuthService = [createAuthToken: {p, t -> authToken}, getAskToLinkOrCreateAccountUri: { null } ]
@@ -33,13 +33,13 @@ class SpringSecurityOAuthControllerSpec extends Specification {
             session[providerkey] = "${provider}_oauth_session_key"
             def oauthService = [findSessionKeyForAccessToken:{p -> providerkey}]
             controller.oauthService = oauthService
-        and:
+        when:
             controller.onSuccess()
-        expect:
-            response.status == responseCode
+        then:
+            thrown OAuthLoginException
         where:
-            provider      |  responseCode
-            'facebook'    |  500
+            provider      |  _
+            'facebook'    |  _
     }
 
     def "onSuccess should redirect to askToLinkOrCreateAccountUri if the user is not logged in"() {
@@ -91,27 +91,22 @@ class SpringSecurityOAuthControllerSpec extends Specification {
         then:
             mav.viewName == "/springSecurityOAuth/askToLinkOrCreateAccount"
     }
-
 }
 
 /*
  * A basic implementation for oauth token for a loggedin user.
  */
 class TestOAuthToken extends OAuthToken {
-
     TestOAuthToken(def token, def json) {
         super(token, json)
         this.principal = new GrailsUser("username", "password", true, true, true, true, [], 1L)
     }
-
     String getProviderName() {
         return "provider"
     }
-
     String getSocialId() {
         return "socialId"
     }
-
     String getScreenName() {
         return "screenName"
     }
