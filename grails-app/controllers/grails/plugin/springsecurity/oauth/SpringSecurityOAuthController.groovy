@@ -174,13 +174,6 @@ class SpringSecurityOAuthController {
         render view: 'askToLinkOrCreateAccount', model: [createAccountCommand: command]
     }
 
-    /*
-    protected renderError(code, viewMessage, logMessage='') {
-        log.warn "${logMessage} ${viewMessage} (returning ${code})"
-        render status: code, text: viewMessage
-    }
-    */
-
     protected Map getDefaultTargetUrl() {
         def config = SpringSecurityUtils.securityConfig
         def savedRequest = SpringSecurityUtils.getSavedRequest(session)
@@ -201,7 +194,6 @@ class SpringSecurityOAuthController {
 
 class OAuthCreateAccountCommand {
 
-    //def grailsApplication
     def springSecurityOAuthService
 
     String username
@@ -210,14 +202,6 @@ class OAuthCreateAccountCommand {
 
     static constraints = {
         username blank: false, minSize: 3, validator: { String username, command ->
-            /*
-            def User = command.grailsApplication.getDomainClass(SpringSecurityUtils.securityConfig.userLookup.userDomainClassName).clazz
-            User.withNewSession { session ->
-                if (username && User.countByUsername(username)) {
-                    return 'OAuthCreateAccountCommand.username.error.unique'
-                }
-            }
-            */
             if (command.springSecurityOAuthService.usernameTaken(username)) {
                 return 'OAuthCreateAccountCommand.username.error.unique'
             }

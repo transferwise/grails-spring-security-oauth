@@ -7,7 +7,7 @@ import grails.plugin.springsecurity.userdetails.GrailsUser
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 
 /**
- * 
+ * Service providing most of the plugin business logic.
  */
 class SpringSecurityOAuthService {
 
