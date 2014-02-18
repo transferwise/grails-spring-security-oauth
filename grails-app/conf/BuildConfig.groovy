@@ -28,10 +28,27 @@ grails.project.dependency.resolution = {
         compile ":oauth:2.4", {
             transitive = false
         }
+        compile ":codenarc:0.20"
 
         build ":release:3.0.1", ":rest-client-builder:1.0.3", {
             export = false
         }
     }
+}
 
+codenarc {
+    reports = {
+        CodenarcXmlReport('xml') {
+            outputFile = 'target/CodeNarc-Report.xml'
+            title = 'Spring Security OAuth plugin CodeNarc Report'
+        }
+        CodenarcHtmlReport('html') {
+            outputFile = 'target/CodeNarc-Report.html'
+            title = 'Spring Security OAuth plugin CodeNarc Report'
+        }
+    }
+    ruleSetFiles='file:grails-app/conf/CodeNarcRuleSet.groovy'
+    maxPriority1Violations = 0
+    maxPriority2Violations = 0
+    maxPriority3Violations = 0
 }

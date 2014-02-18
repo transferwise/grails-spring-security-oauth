@@ -6,6 +6,9 @@ import grails.plugin.springsecurity.userdetails.GrailsUser
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 
+/**
+ * 
+ */
 class SpringSecurityOAuthService {
 
     def grailsApplication

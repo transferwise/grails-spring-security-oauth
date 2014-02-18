@@ -3,6 +3,9 @@ package grails.plugin.springsecurity.oauth
 import grails.test.mixin.TestFor
 import spock.lang.*
 
+/**
+ * Unit test for OAuthCreateAccountCommand.
+ */
 @TestFor(SpringSecurityOAuthController)
 class SpringSecurityOAuthControllerCommandsSpec extends Specification {
 
@@ -10,7 +13,6 @@ class SpringSecurityOAuthControllerCommandsSpec extends Specification {
     def "Registration command objects for #loginId validating correctly"() {
 
         given: "a mocked command object"
-        //controller.grailsApplication.config.grails.plugin.springsecurity.userLookup.userDomainClassName = 's2oauth.testapp.User'
         def urc = mockCommandObject(OAuthCreateAccountCommand)
         urc.springSecurityOAuthService = [usernameTaken: { u -> false }]
 
@@ -24,7 +26,6 @@ class SpringSecurityOAuthControllerCommandsSpec extends Specification {
 
         then: "the appropriate fields are flagged as errors"
         isValidRegistration == anticipatedValid
-        println "${loginId} - ${urc.errors.getFieldError(fieldInError)?.code}"
         urc.errors.getFieldError(fieldInError)?.code == errorCode
 
         where:

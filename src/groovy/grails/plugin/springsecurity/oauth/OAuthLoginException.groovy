@@ -15,6 +15,9 @@
  */
 package grails.plugin.springsecurity.oauth
 
+/**
+ * Main exception rethrow in case of errors.
+ */
 class OAuthLoginException extends RuntimeException {
 
     OAuthLoginException(String message) {

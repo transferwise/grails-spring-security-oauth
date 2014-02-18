@@ -2,10 +2,9 @@ package grails.plugin.springsecurity.oauth
 
 import spock.lang.*
 
-// import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
-// import org.codehaus.groovy.grails.plugins.web.mimes.MimeTypesFactoryBean
-// import org.codehaus.groovy.grails.web.mime.DefaultMimeUtility
-
+/**
+ * Integration test for SpringSecurityOAuthController.
+ */
 @Unroll
 class SpringSecurityOAuthControllerIntegrationSpec extends Specification {
 

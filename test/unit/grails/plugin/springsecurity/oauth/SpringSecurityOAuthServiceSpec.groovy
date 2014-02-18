@@ -4,6 +4,9 @@ import grails.test.mixin.*
 import spock.lang.*
 import grails.persistence.Entity
 
+/**
+ * Unit test for SpringSecurityOAuthService.
+ */
 @TestFor(SpringSecurityOAuthService)
 @Mock(TestUser)
 class SpringSecurityOAuthServiceSpec extends Specification  {
