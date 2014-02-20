@@ -12,21 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-security {
-    oauth {
-        active = true
 
-        printStatusMessages = true
+ /*
+grails.plugin.springsecurity.oauth.active = true
+//grails.plugin.springsecurity.oauth.domainClass = 'OAuthID'
+//grails.plugin.springsecurity.oauth.userLookup.oAuthIdsPropertyName = 'oAuthIDs'
+grails.plugin.springsecurity.oauth.registration.askToLinkOrCreateAccountUri = '/oauth/askToLinkOrCreateAccount'
+grails.plugin.springsecurity.oauth.registration.userDomainClassName = null
+grails.plugin.springsecurity.oauth.registration.roleNames = ['ROLE_USER']
+*/
 
-        domainClass = 'OAuthID'
-        userLookup {
-            oAuthIdsPropertyName = 'oAuthIDs'
-        }
-
-        registration {
-            askToLinkOrCreateAccountUri = '/oauth/askToLinkOrCreateAccount'
-            userDomainClassName = null
-            roleNames = ['ROLE_USER']
-        }
-    }
-}

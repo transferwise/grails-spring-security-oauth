@@ -71,7 +71,13 @@ class SpringSecurityOAuthService {
     }
 
     def getAskToLinkOrCreateAccountUri() {
-        return SpringSecurityUtils.securityConfig.oauth.registration.askToLinkOrCreateAccountUri
+        def askToLinkOrCreateAccountUri = grailsApplication.config.grails.plugin.springsecurity.oauth.registration.askToLinkOrCreateAccountUri ?: '/oauth/askToLinkOrCreateAccount'
+        return askToLinkOrCreateAccountUri
+    }
+
+    def getRoleNames() {
+        def roleNames = grailsApplication.config.grails.plugin.springsecurity.oauth.registration.roleNames ?: ['ROLE_USER']
+        return roleNames
     }
 
     protected String lookupUserClassName() {
@@ -99,7 +105,8 @@ class SpringSecurityOAuthService {
     }
 
     protected String lookupOAuthIdClassName() {
-        SpringSecurityUtils.securityConfig.oauth.domainClass
+        def domainClass = grailsApplication.config.grails.plugin.springsecurity.oauth.domainClass ?: 'OAuthID'
+        return domainClass
     }
 
     protected Class<?> lookupOAuthIdClass() {

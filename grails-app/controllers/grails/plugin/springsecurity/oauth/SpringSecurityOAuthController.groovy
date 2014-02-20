@@ -104,7 +104,7 @@ class SpringSecurityOAuthController {
      * Associates an OAuthID with an existing account. Needs the user's password to ensure
      * that the user owns that account, and authenticates to verify before linking.
      */
-    public void linkAccount(OAuthLinkAccountCommand command) {
+    def linkAccount(OAuthLinkAccountCommand command) {
         OAuthToken oAuthToken = session[SPRING_SECURITY_OAUTH_TOKEN]
         if (!oAuthToken) {
             log.warn "linkAccount: OAuthToken not found in session"
@@ -118,13 +118,13 @@ class SpringSecurityOAuthController {
                     user.addToOAuthIDs(provider: oAuthToken.providerName, accessToken: oAuthToken.socialId, user: user)
                     if (user.validate() && user.save()) {
                         oAuthToken = springSecurityOAuthService.updateOAuthToken(oAuthToken, user)
-                        return
+                        return true
                     }
                 } else {
                     command.errors.rejectValue("username", "OAuthLinkAccountCommand.username.not.exists")
                 }
                 status.setRollbackOnly()
-                return
+                return false
             }
             if (linked) {
                 authenticateAndRedirect(oAuthToken, getDefaultTargetUrl())
@@ -135,7 +135,7 @@ class SpringSecurityOAuthController {
         return
     }
 
-    public void createAccount(OAuthCreateAccountCommand command) {
+    def createAccount(OAuthCreateAccountCommand command) {
         OAuthToken oAuthToken = session[SPRING_SECURITY_OAUTH_TOKEN]
         if (!oAuthToken) {
             log.warn "createAccount: OAuthToken not found in session"
@@ -155,15 +155,16 @@ class SpringSecurityOAuthController {
                     // updateUser(user, oAuthToken)
                     if (!user.validate() || !user.save()) {
                         status.setRollbackOnly()
-                        return
+                        return false
                     }
                     def UserRole = springSecurityOAuthService.lookupUserRoleClass()
                     def Role = springSecurityOAuthService.lookupRoleClass()
-                    for (roleName in config.oauth.registration.roleNames) {
+                    def roles = springSecurityOAuthService.getRoleNames()
+                    for (roleName in roles) {
                         UserRole.create user, Role.findByAuthority(roleName)
                     }
                     oAuthToken = springSecurityOAuthService.updateOAuthToken(oAuthToken, user)
-                    return
+                    return true
                 }
                 if (created) {
                     authenticateAndRedirect(oAuthToken, getDefaultTargetUrl())

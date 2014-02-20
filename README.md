@@ -133,6 +133,16 @@ oauth {
 }
 ```
 
+Other configuration keys you can use, are (with their default values):
+
+```groovy
+grails.plugin.springsecurity.oauth.active = true
+grails.plugin.springsecurity.oauth.domainClass = 'OAuthID'
+grails.plugin.springsecurity.oauth.userLookup.oAuthIdsPropertyName = 'oAuthIDs'
+grails.plugin.springsecurity.oauth.registration.askToLinkOrCreateAccountUri = '/oauth/askToLinkOrCreateAccount'
+grails.plugin.springsecurity.oauth.registration.roleNames = ['ROLE_USER']
+```
+
 Once you have an user domain and configured provider names, go with:
 
     grails s2-init-oauth [domain-class-package] [oauthid-class-name]

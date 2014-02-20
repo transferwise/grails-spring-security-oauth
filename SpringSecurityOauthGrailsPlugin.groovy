@@ -1,3 +1,5 @@
+
+import grails.plugin.springsecurity.ReflectionUtils
 import grails.plugin.springsecurity.SpringSecurityUtils
 
 /**
@@ -6,7 +8,7 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 * @author <a href='mailto:donbeave@gmail.com'>Alexey Zhokhov</a>
 */
 class SpringSecurityOauthGrailsPlugin {
-    def version = "2.1.0-RC1"
+    def version = "2.1.0-RC2"
     def grailsVersion = "2.0 > *"
     def pluginExcludes = [
             "web-app/*"
@@ -30,26 +32,27 @@ into existing applications and a host of utility functions to make things like "
     def scm = [url: 'https://github.com/enr/grails-spring-security-oauth/']
 
     def doWithSpring = {
-        def conf = SpringSecurityUtils.securityConfig
+        ReflectionUtils.application = application
 
-        boolean printStatusMessages = (conf.printStatusMessages instanceof Boolean) ? conf.printStatusMessages : true
-
-        if (!conf || !conf.active) {
-            return
+        if (application.warDeployed) {
+            // need to reset here since web.xml was already built, so
+            // doWithWebDescriptor isn't called when deployed as war
+            SpringSecurityUtils.resetSecurityConfig()
         }
 
-        SpringSecurityUtils.loadSecondaryConfig 'DefaultSpringSecurityOAuthConfig'
-        // have to get again after overlaying DefaultSpringSecurityOAuthConfig
-        conf = SpringSecurityUtils.securityConfig
+        SpringSecurityUtils.application = application
 
-        if (!conf.oauth.active) {
+        def conf = SpringSecurityUtils.securityConfig
+        boolean printStatusMessages = (conf.printStatusMessages instanceof Boolean) ? conf.printStatusMessages : true
+        if (!conf || !conf.active) {
+            if (printStatusMessages) {
+                println '\n\nSpring Security is disabled, not loading Spring Security OAuth plugin\n\n'
+            }
             return
         }
 
         if (printStatusMessages) {
-            println '\nConfiguring Spring Security OAuth ...'
-
-            println '... finished configuring Spring Security OAuth\n'
+            println '\nSpring Security OAuth plugin installed ...'
         }
     }
 }

@@ -59,24 +59,24 @@ private boolean configure() {
         return false
     }
 
-    def SpringSecurityUtils = classLoader.loadClass(
-            'grails.plugin.springsecurity.SpringSecurityUtils')
-    SpringSecurityUtils.loadSecondaryConfig 'DefaultSpringSecurityOAuthConfig'
+    def SpringSecurityUtils = classLoader.loadClass('grails.plugin.springsecurity.SpringSecurityUtils')
+    //SpringSecurityUtils.loadSecondaryConfig 'DefaultSpringSecurityOAuthConfig'
     conf = SpringSecurityUtils.securityConfig
 
     (oAuthIDPackageName, oAuthIDClassName) = argValues
     oAuthIDPackageDir = packageToDir(oAuthIDPackageName)
     def oAuthIDClassFullName = oAuthIDPackageName + '.' + oAuthIDClassName
 
-    String oAuthIdsPropertyName = conf.oauth.userLookup.oAuthIdsPropertyName
-    checkValue oAuthIdsPropertyName, 'oauth.userLookup.oAuthIdsPropertyName'
+    //String oAuthIdsPropertyName = conf.oauth.userLookup.oAuthIdsPropertyName
+    //checkValue oAuthIdsPropertyName, 'oauth.userLookup.oAuthIdsPropertyName'
 
     String userClassFullName = conf.userLookup.userDomainClassName
+    /*
     checkValue userClassFullName, 'userLookup.userDomainClassName'
-
     if (conf.oauth.registration.userDomainClassName) {
         userClassFullName = conf.oauth.registration.userDomainClassName
     }
+    */
 
     String userPackageName
     String userClassName
@@ -108,7 +108,8 @@ private boolean configure() {
     String roleNameField = conf.authority.nameField
     checkValue roleNameField, 'authority.nameField'
 
-    templateAttributes = [userClassFullName: userClassFullName,
+    templateAttributes = [
+            userClassFullName: userClassFullName,
             userClassName: userClassName,
             roleClassName: roleClassName,
             authorityCapName: GrailsNameUtils.getClassName(roleNameField, null),
@@ -122,9 +123,10 @@ private boolean configure() {
             enabledPropertyName: enabledPropertyName,
             oAuthIDPackageName: oAuthIDPackageName,
             oAuthIDClassName: oAuthIDClassName,
-            oAuthIDClassFullName: oAuthIDClassFullName,
-            oAuthIdsPropertyName: oAuthIdsPropertyName,
-            oAuthIdsCapPropertyName: GrailsNameUtils.getClassName(oAuthIdsPropertyName, null)]
+            oAuthIDClassFullName: oAuthIDClassFullName
+            //oAuthIdsPropertyName: oAuthIdsPropertyName,
+            //oAuthIdsCapPropertyName: GrailsNameUtils.getClassName(oAuthIdsPropertyName, null)
+            ]
 }
 
 private void createDomains() {
