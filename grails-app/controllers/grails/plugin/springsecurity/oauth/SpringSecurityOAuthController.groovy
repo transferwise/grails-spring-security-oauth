@@ -150,7 +150,7 @@ class SpringSecurityOAuthController {
                     //User user = new User(username: command.username, password: command.password1, enabled: true)
                     user.username = command.username
                     user.password = command.password1
-                    //user.enabled = true
+                    user.enabled = true
                     user.addToOAuthIDs(provider: oAuthToken.providerName, accessToken: oAuthToken.socialId, user: user)
                     // updateUser(user, oAuthToken)
                     if (!user.validate() || !user.save()) {
