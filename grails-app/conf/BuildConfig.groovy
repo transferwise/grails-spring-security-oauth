@@ -17,17 +17,12 @@ grails.project.dependency.resolution = {
         grailsCentral()
         mavenCentral()
         mavenRepo 'http://repo.spring.io/milestone'
-    }
-
-    dependencies {
-        runtime "org.scribe:scribe:1.3.5"
+        mavenRepo 'https://raw.github.com/fernandezpablo85/scribe-java/mvn-repo'
     }
 
     plugins {
         compile ":spring-security-core:2.0-RC2"
-        compile ":oauth:2.4", {
-            transitive = false
-        }
+        compile ":oauth:2.5"
         compile ":codenarc:0.20"
 
         build ":release:3.0.1", ":rest-client-builder:1.0.3", {
