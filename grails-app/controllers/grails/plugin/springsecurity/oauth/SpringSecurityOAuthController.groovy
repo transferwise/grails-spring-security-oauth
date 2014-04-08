@@ -79,6 +79,11 @@ class SpringSecurityOAuthController {
     }
 
     def onFailure() {
+        // TODO: put it in i18n messages file
+        //flash.message = "book.delete.message"
+        //flash.args = ["The Stand"]
+        flash.default = "Error authenticating with ${params.provider}"
+        log.warn "Error authenticating with external provider ${params.provider}"
         authenticateAndRedirect(null, getDefaultTargetUrl())
     }
 

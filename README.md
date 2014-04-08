@@ -88,7 +88,7 @@ oauth {
             key = 'oauth_facebook_key'
             secret = 'oauth_facebook_secret'
             successUri = '/oauth/facebook/success'
-            failureUri = '/oauth/facebook/error'
+            failureUri = '/oauth/facebook/failure'
             callback = "${baseURL}/oauth/facebook/callback"
         }
         twitter {
@@ -96,7 +96,7 @@ oauth {
             key = 'oauth_twitter_key'
             secret = 'oauth_twitter_secret'
             successUri = '/oauth/twitter/success'
-            failureUri = '/oauth/twitter/error'
+            failureUri = '/oauth/twitter/failure'
             callback = "${baseURL}/oauth/twitter/callback"
         }
         linkedin {
@@ -104,7 +104,7 @@ oauth {
             key = 'oauth_linkedin_key'
             secret = 'oauth_linkedin_secret'
             successUri = '/oauth/linkedin/success'
-            failureUri = '/oauth/linkedin/error'
+            failureUri = '/oauth/linkedin/failure'
             callback = "${baseURL}/oauth/linkedin/callback"
         }
 
@@ -114,7 +114,7 @@ oauth {
             key = 'oauth_google_key'
             secret = 'oauth_google_secret'
             successUri = '/oauth/google/success'
-            failureUri = '/oauth/google/error'
+            failureUri = '/oauth/google/failure'
             callback = "${baseURL}/oauth/google/callback"
             scope = 'https://www.googleapis.com/auth/userinfo.email'
         }
@@ -125,7 +125,7 @@ oauth {
             key = 'oauth_google_key'
             secret = 'oauth_google_secret'
             successUri = '/oauth/google/success'
-            failureUri = '/oauth/google/error'
+            failureUri = '/oauth/google/failure'
             callback = "${baseURL}/oauth/google/callback"
             scope = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
         }
@@ -179,6 +179,8 @@ Logged with yahoo? <s2o:ifLoggedInWith provider="yahoo">yes</s2o:ifLoggedInWith>
 Extensions
 ----------
 
+List of known extensions:
+
 * [Facebook][spring-security-oauth-facebook-plugin]
 * [Google][spring-security-oauth-google-plugin]
 * [LinkedIn][spring-security-oauth-linkedin-plugin]
@@ -187,6 +189,39 @@ Extensions
 * [Weibo][spring-security-oauth-weibo-plugin]
 * [Yahoo][spring-security-oauth-yahoo-plugin]
 * [Dailymotion][spring-security-oauth-dailymotion-plugin]
+
+
+Development
+-----------
+
+To try out before release use the `create-testapps` script:
+
+Create a file `testapps/s2oauth/testapps-config.groovy` (ignored from Git) with your external providers valid credentials
+
+```groovy
+oauth {
+    providers {
+        facebook {
+            key = '...'
+            secret = '...'
+        }
+        twitter {
+            key = '...'
+            secret = '...'
+        }
+        linkedin {
+            key = '...'
+            secret = '...'
+        }
+        google {
+            key = '...'
+            secret = '...'
+        }
+    }
+}
+```
+
+Run `./grailsw compile && ./grails create-testapps`.
 
 That's it!
 
