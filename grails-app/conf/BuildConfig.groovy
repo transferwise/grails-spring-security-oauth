@@ -25,7 +25,7 @@ grails.project.dependency.resolution = {
         compile ":oauth:2.5"
         compile ":codenarc:0.20"
 
-        build ":release:3.0.1", ":rest-client-builder:1.0.3", ":testapps:0.4.0", {
+        build ":release:3.0.1", ":rest-client-builder:1.0.3", ":testapps:0.5.0", {
             export = false
         }
     }
