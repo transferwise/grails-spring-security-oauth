@@ -23,7 +23,7 @@ grails.project.dependency.resolution = {
     plugins {
         compile ":spring-security-core:2.0-RC2"
         compile ":oauth:2.5"
-        compile ":codenarc:0.20"
+        compile ":codenarc:0.21"
 
         build ":release:3.0.1", ":rest-client-builder:1.0.3", ":testapps:0.5.0", {
             export = false
@@ -44,6 +44,6 @@ codenarc {
     }
     ruleSetFiles='file:grails-app/conf/CodeNarcRuleSet.groovy'
     maxPriority1Violations = 0
-    maxPriority2Violations = 5  // FIX BooleanMethodReturnsNull in controller
-    maxPriority3Violations = 5
+    maxPriority2Violations = 0
+    maxPriority3Violations = 0
 }

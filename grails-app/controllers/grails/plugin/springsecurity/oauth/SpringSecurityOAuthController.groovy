@@ -123,13 +123,13 @@ class SpringSecurityOAuthController {
                     user.addToOAuthIDs(provider: oAuthToken.providerName, accessToken: oAuthToken.socialId, user: user)
                     if (user.validate() && user.save()) {
                         oAuthToken = springSecurityOAuthService.updateOAuthToken(oAuthToken, user)
-                        return true
+                        true
                     }
                 } else {
                     command.errors.rejectValue("username", "OAuthLinkAccountCommand.username.not.exists")
                 }
                 status.setRollbackOnly()
-                return false
+                false
             }
             if (linked) {
                 authenticateAndRedirect(oAuthToken, getDefaultTargetUrl())
@@ -160,7 +160,7 @@ class SpringSecurityOAuthController {
                     // updateUser(user, oAuthToken)
                     if (!user.validate() || !user.save()) {
                         status.setRollbackOnly()
-                        return false
+                        false
                     }
                     def UserRole = springSecurityOAuthService.lookupUserRoleClass()
                     def Role = springSecurityOAuthService.lookupRoleClass()
@@ -169,7 +169,7 @@ class SpringSecurityOAuthController {
                         UserRole.create user, Role.findByAuthority(roleName)
                     }
                     oAuthToken = springSecurityOAuthService.updateOAuthToken(oAuthToken, user)
-                    return true
+                    true
                 }
                 if (created) {
                     authenticateAndRedirect(oAuthToken, getDefaultTargetUrl())
