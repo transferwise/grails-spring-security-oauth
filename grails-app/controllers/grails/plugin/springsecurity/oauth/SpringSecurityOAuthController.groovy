@@ -44,21 +44,21 @@ class SpringSecurityOAuthController {
      *
      * "/oauth/$provider/success"(controller: "springSecurityOAuth", action: "onSuccess")
      */
-    def onSuccess() {
+    def onSuccess(String provider) {
         // Validate the 'provider' URL. Any errors here are either misconfiguration
         // or web crawlers (or malicious users).
-        if (!params.provider) {
+        if (!provider) {
             log.warn "The Spring Security OAuth callback URL must include the 'provider' URL parameter"
             throw new OAuthLoginException("The Spring Security OAuth callback URL must include the 'provider' URL parameter")
         }
 
-        def sessionKey = oauthService.findSessionKeyForAccessToken(params.provider)
+        def sessionKey = oauthService.findSessionKeyForAccessToken(provider)
         if (!session[sessionKey]) {
-            log.warn "No OAuth token in the session for provider '${params.provider}'"
-            throw new OAuthLoginException("Authentication error for provider '${params.provider}'")
+            log.warn "No OAuth token in the session for provider '${provider}'"
+            throw new OAuthLoginException("Authentication error for provider '${provider}'")
         }
         // Create the relevant authentication token and attempt to log in.
-        OAuthToken oAuthToken = springSecurityOAuthService.createAuthToken(params.provider, session[sessionKey])
+        OAuthToken oAuthToken = springSecurityOAuthService.createAuthToken(provider, session[sessionKey])
 
         if (oAuthToken.principal instanceof GrailsUser) {
             authenticateAndRedirect(oAuthToken, getDefaultTargetUrl())
@@ -78,12 +78,12 @@ class SpringSecurityOAuthController {
         }
     }
 
-    def onFailure() {
+    def onFailure(String provider) {
         // TODO: put it in i18n messages file
         //flash.message = "book.delete.message"
         //flash.args = ["The Stand"]
-        flash.default = "Error authenticating with ${params.provider}"
-        log.warn "Error authenticating with external provider ${params.provider}"
+        flash.default = "Error authenticating with ${provider}"
+        log.warn "Error authenticating with external provider ${provider}"
         authenticateAndRedirect(null, getDefaultTargetUrl())
     }
 
