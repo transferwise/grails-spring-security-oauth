@@ -2,11 +2,6 @@
 
 set -e
 
-echo "GRAILS_CENTRAL_USERNAME: ${GRAILS_CENTRAL_USERNAME}"
-echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
-echo "TRAVIS_REPO_SLUG: ${TRAVIS_REPO_SLUG}"
-echo "TRAVIS_PULL_REQUEST: ${TRAVIS_PULL_REQUEST}"
-
 [[ -d target ]] && rm -rf target
 rm -rf *.zip
 chmod +x ./grailsw
@@ -14,7 +9,7 @@ chmod +x ./grailsw
 ./grailsw compile --non-interactive
 ./grailsw codenarc --non-interactive
 ./grailsw test-app --non-interactive
-#./grailsw package-plugin --non-interactive
+./grailsw package-plugin --non-interactive
 #./grailsw doc --pdf --non-interactive
 
 #filename=$(find . -name "grails-*.zip" | head -1)
@@ -46,8 +41,7 @@ if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_REPO_SLUG == "enr/grails-spring-secu
 #  else
 #    echo "SNAPSHOT version, not publishing docs"
 #  fi
-#  ./grailsw publish-plugin --no-scm --allow-overwrite --non-interactive
-  echo "Publishing plugin..."
+  ./grailsw publish-plugin --no-scm --allow-overwrite --non-interactive
 else
   echo "Not on master branch, so not publishing"
   echo "TRAVIS_BRANCH: $TRAVIS_BRANCH"
