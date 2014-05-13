@@ -8,10 +8,9 @@ branches:
   only:
     - master
 
-before_script:
-    - chmod +x grailsw
-    - ./grailsw clean
-    - ./grailsw refresh-dependencies
-    - ./grailsw compile
+script: ./travis-build.sh
 
-script: ./grailsw codenarc && ./grailsw test-app
+env:
+  global:
+  - secure: "rmYo0wWQivMCxRY8idg4sJHTnuXySawmfoKbFQ/wS46SM7rs1JJrPa4TetYugb0gdLtxSwAzIU+FaKwCDR9p8uykil+pnfqLZxrTmwikXipV/Wh+dXPrNz1L9ozqVUvcKDxQd0N7AkSodAkE7xIeGjpBTtQquhMcfJoQhtQsmrU="
+
