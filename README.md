@@ -31,13 +31,20 @@ Version provider's service and token are moved into separate plugin, example:
 Installation
 ------------
 
+To install the last version of the plugin you need to add custom repositories to your `BuildConfig.groovy`:
+
+```groovy
+    mavenRepo "https://raw.github.com/fernandezpablo85/scribe-java/mvn-repo"
+    mavenRepo "http://repo.spring.io/milestone/"
+```
+
 In `BuildConfig.groovy`, add the dependency to "plugins" section:
 
 ```groovy
 
     plugins {
         //...
-        compile ':spring-security-oauth:2.0.2'
+        compile ':spring-security-oauth:2.1.0-SNAPSHOT'
 
         // and also you need add at least one of extensions:
         compile ':spring-security-oauth-facebook:0.1'
