@@ -1,4 +1,10 @@
 
+if(System.getenv('TRAVIS_BRANCH')) {
+    grails.project.repos.grailsCentral.username = System.getenv("GRAILS_CENTRAL_USERNAME")
+    grails.project.repos.grailsCentral.password = System.getenv("GRAILS_CENTRAL_PASSWORD")
+}
+println "GRAILS_CENTRAL_USERNAME=${System.getenv('GRAILS_CENTRAL_USERNAME')}"
+
 grails.project.work.dir = 'target'
 
 grails.project.target.level = 1.6
