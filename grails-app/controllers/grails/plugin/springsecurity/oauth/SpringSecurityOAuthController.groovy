@@ -19,7 +19,8 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.userdetails.GrailsUser
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.security.core.context.SecurityContextHolder
-
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.AuthenticationException
 /**
  * Simple controller for handling OAuth authentication and integrating it
  * into Spring Security.
@@ -31,6 +32,7 @@ class SpringSecurityOAuthController {
     def oauthService
     def springSecurityService
     def springSecurityOAuthService
+    def authenticationManager
 
     /**
      * This can be used as a callback for a successful OAuth authentication
@@ -116,20 +118,30 @@ class SpringSecurityOAuthController {
             throw new OAuthLoginException('Authentication error')
         }
         if (request.post) {
+            if (!authenticationIsValid(command.username, command.password)) {
+                log.info "Authentication error for use ${command.username}"
+                command.errors.rejectValue("username", "OAuthLinkAccountCommand.authentication.error")
+                render view: 'askToLinkOrCreateAccount', model: [linkAccountCommand: command]
+                return
+            }
+            def commandValid = command.validate()
             def User = springSecurityOAuthService.lookupUserClass()
-            boolean linked = command.validate() && User.withTransaction { status ->
-                def user = User.findByUsernameAndPassword(command.username, springSecurityService.encodePassword(command.password))
+            boolean linked = commandValid && User.withTransaction { status ->
+                //def user = User.findByUsernameAndPassword(command.username, springSecurityService.encodePassword(command.password))
+                def user = User.findByUsername(command.username)
                 if (user) {
                     user.addToOAuthIDs(provider: oAuthToken.providerName, accessToken: oAuthToken.socialId, user: user)
                     if (user.validate() && user.save()) {
                         oAuthToken = springSecurityOAuthService.updateOAuthToken(oAuthToken, user)
-                        true
+                        return true
+                    } else {
+                        return false
                     }
                 } else {
                     command.errors.rejectValue("username", "OAuthLinkAccountCommand.username.not.exists")
                 }
                 status.setRollbackOnly()
-                false
+                return false
             }
             if (linked) {
                 authenticateAndRedirect(oAuthToken, getDefaultTargetUrl())
@@ -138,6 +150,16 @@ class SpringSecurityOAuthController {
         }
         render view: 'askToLinkOrCreateAccount', model: [linkAccountCommand: command]
         return
+    }
+
+    private boolean authenticationIsValid(String username, String password) {
+        boolean valid = true
+        try {
+           authenticationManager.authenticate new UsernamePasswordAuthenticationToken(username, password)
+        } catch (AuthenticationException e) {
+           valid = false
+        } 
+        return valid
     }
 
     def createAccount(OAuthCreateAccountCommand command) {
@@ -149,8 +171,9 @@ class SpringSecurityOAuthController {
         if (request.post) {
             if (!springSecurityService.loggedIn) {
                 def config = SpringSecurityUtils.securityConfig
+                def commandValid = command.validate()
                 def User = springSecurityOAuthService.lookupUserClass()
-                boolean created = command.validate() && User.withTransaction { status ->
+                boolean created = commandValid && User.withTransaction { status ->
                     def user = springSecurityOAuthService.lookupUserClass().newInstance()
                     //User user = new User(username: command.username, password: command.password1, enabled: true)
                     user.username = command.username

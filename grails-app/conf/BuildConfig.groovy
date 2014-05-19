@@ -9,7 +9,7 @@ grails.project.work.dir = 'target'
 grails.project.target.level = 1.6
 grails.project.source.level = 1.6
 
-grails.project.dependency.resolver = "maven"
+grails.project.dependency.resolver = 'maven'
 grails.project.dependency.resolution = {
 
     inherits "global"
@@ -26,11 +26,15 @@ grails.project.dependency.resolution = {
     }
 
     plugins {
-        compile ":spring-security-core:2.0-RC2"
-        compile ":oauth:2.5"
-        compile ":codenarc:0.21"
+        compile ':spring-security-core:2.0-RC3'
+        compile ':oauth:2.5'
+        compile ':codenarc:0.21'
+        // we need this to compile in Grails 2.4 RC...
+        compile ':hibernate:3.6.10.14', {
+            export = false
+        }
 
-        build ":release:3.0.1", ":rest-client-builder:2.0.1", ":testapps:0.5.0", {
+        build ':release:3.0.1', ':rest-client-builder:2.0.1', ':testapps:0.5.0', {
             export = false
         }
     }

@@ -13,27 +13,24 @@ s2oauth {
     projectDir = projectDirCommon
 
     // if true the app name name will hava a -$timestamp suffix
-    //timestamp = false
+    timestamp = false
 
     // custom repositories
     customRepos = ['https://raw.github.com/fernandezpablo85/scribe-java/mvn-repo']
 
     plugins {
-        compile = [':spring-security-oauth:2.1.0-RC2',
-        ':spring-security-oauth-facebook:0.1', ':spring-security-oauth-google:0.2', ':spring-security-oauth-linkedin:0.1', ':spring-security-oauth-twitter:0.1']
+        compile = [ ':spring-security-oauth:2.1.0-SNAPSHOT',
+                    ':spring-security-oauth-facebook:0.1',
+                    ':spring-security-oauth-google:0.2',
+                    ':spring-security-oauth-linkedin:0.1',
+                    ':spring-security-oauth-twitter:0.1']
     }
 
-    
-    dependencies {
-        compile = ['org.scribe:scribe:1.3.6']
-    }
-    
-    
     // will be appended to grails-app/conf/Config.groovy
     customConfig = 'oauth { debug = true }'
 
     log {
-        debug = ['grails.plugin.springsecurity.oauth', 's2oauth.testapp']        
+        debug = ['grails.plugin.springsecurity.oauth', 's2oauth.testapp', 'grails.app.controllers']        
         info = ['grails.app.conf.BootStrap']
     }
 
