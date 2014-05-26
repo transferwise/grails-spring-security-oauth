@@ -23,10 +23,8 @@ import grails.plugin.springsecurity.SpringSecurityUtils
  */
 class SpringSecurityOauthGrailsPlugin {
 
-    def version = '2.1.0-RC4'
+    def version = '2.1.0-SNAPSHOT'
     def grailsVersion = '2.0 > *'
-
-    def loadAfter = ['springSecurityCore']
 
     def pluginExcludes = [
             'web-app/*'
