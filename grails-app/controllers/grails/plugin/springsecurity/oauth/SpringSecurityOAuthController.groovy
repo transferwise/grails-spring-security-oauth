@@ -33,6 +33,7 @@ class SpringSecurityOAuthController {
     def springSecurityService
     def springSecurityOAuthService
     def authenticationManager
+    def rememberMeServices
 
     /**
      * This can be used as a callback for a successful OAuth authentication
@@ -104,7 +105,7 @@ class SpringSecurityOAuthController {
                 return
             }
         }
-        return new ModelAndView("/springSecurityOAuth/askToLinkOrCreateAccount", [:])
+        return new ModelAndView("/springSecurityOAuth/askToLinkOrCreateAccount", [rememberMeParameter:getRememberMeParameterName()])
     }
 
     /**
@@ -144,6 +145,7 @@ class SpringSecurityOAuthController {
                 return false
             }
             if (linked) {
+
                 authenticateAndRedirect(oAuthToken, getDefaultTargetUrl())
                 return
             }
@@ -216,7 +218,16 @@ class SpringSecurityOAuthController {
     protected void authenticateAndRedirect(OAuthToken oAuthToken, redirectUrl) {
         session.removeAttribute SPRING_SECURITY_OAUTH_TOKEN
         SecurityContextHolder.context.authentication = oAuthToken
+        String rememberMeParameterName = getRememberMeParameterName()
+        if (rememberMeParameterName && params[rememberMeParameterName]) {
+            rememberMeServices.loginSuccess(request, response, SecurityContextHolder.context.authentication)
+        }
         redirect(redirectUrl instanceof Map ? redirectUrl : [uri: redirectUrl])
+    }
+
+    private String getRememberMeParameterName() {
+        def conf = SpringSecurityUtils.securityConfig
+        return conf.rememberMe.parameter
     }
 
 }

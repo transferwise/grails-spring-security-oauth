@@ -94,6 +94,7 @@
                 <label for='password'><g:message code="OAuthLinkAccountCommand.password.label" default="Password"/>:</label>
                 <g:passwordField name='password' value='${linkAccountCommand?.password}'/>
             </div>
+            <input type='checkbox' class='chk' name='${rememberMeParameter}' id='remember_me' />
             <g:submitButton name="${message(code: 'springSecurity.oauth.registration.login.button', default: 'Login')}"/>
         </fieldset>
     </g:form>
