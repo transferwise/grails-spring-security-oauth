@@ -228,7 +228,7 @@ oauth {
 }
 ```
 
-Run `./grailsw compile && ./grails create-testapps`.
+Run `./grailsw compile && ./grailsw create-testapps`.
 
 That's it!
 
