@@ -112,6 +112,7 @@ class SpringSecurityOAuthController {
      * Associates an OAuthID with an existing account. Needs the user's password to ensure
      * that the user owns that account, and authenticates to verify before linking.
      */
+    @SuppressWarnings('BooleanMethodReturnsNull')
     def linkAccount(OAuthLinkAccountCommand command) {
         OAuthToken oAuthToken = session[SPRING_SECURITY_OAUTH_TOKEN]
         if (!oAuthToken) {
@@ -145,7 +146,6 @@ class SpringSecurityOAuthController {
                 return false
             }
             if (linked) {
-
                 authenticateAndRedirect(oAuthToken, getDefaultTargetUrl())
                 return
             }
