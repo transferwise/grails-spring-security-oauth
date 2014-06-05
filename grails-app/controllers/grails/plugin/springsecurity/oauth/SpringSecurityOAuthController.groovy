@@ -219,7 +219,7 @@ class SpringSecurityOAuthController {
         session.removeAttribute SPRING_SECURITY_OAUTH_TOKEN
         SecurityContextHolder.context.authentication = oAuthToken
         String rememberMeParameterName = getRememberMeParameterName()
-        if (rememberMeParameterName && params[rememberMeParameterName]) {
+        if ((oAuthToken) && rememberMeParameterName && params[rememberMeParameterName]) {
             rememberMeServices.loginSuccess(request, response, SecurityContextHolder.context.authentication)
         }
         redirect(redirectUrl instanceof Map ? redirectUrl : [uri: redirectUrl])
